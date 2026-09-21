@@ -96,6 +96,91 @@ export interface ContactLogEntry {
   next_action_date: string;
 }
 
+export type StageName =
+  | "Enquiry Qualified"
+  | "Docs Collection"
+  | "Logged In (Filed)"
+  | "Credit Processing"
+  | "Query / Deficiency"
+  | "Sanctioned"
+  | "Legal / Valuation"
+  | "Disbursement Pending"
+  | "Disbursed"
+  | "Rejected"
+  | "Dropped / Lost";
+
+export interface StageDefinition {
+  id: string;
+  name: StageName;
+  win_prob: number; // e.g. 0.10 for 10%
+  is_open: boolean;
+  kind: "progress" | "hold" | "won" | "lost";
+}
+
+export interface CaseSubmission {
+  id: string;
+  submission_code: string; // e.g. CS-0001-A
+  lender_id: string;
+  lender_name: string;
+  banker_id: string;
+  banker_name: string;
+  stage: StageName;
+  stage_updated_on: string;
+  login_date?: string;
+  sanctioned_amount?: number;
+  sanction_date?: string;
+  expected_disbursal_date?: string;
+  rejection_reason?: string;
+  is_primary: boolean;
+  notes: string;
+}
+
+export interface CaseItem {
+  id: string;
+  case_code: string; // e.g. CS-0001
+  client_id: string;
+  client_code: string;
+  client_name: string;
+  case_type: "Fresh" | "Balance Transfer (Takeover)" | "Top-up" | "Enhancement / Renewal";
+  product_id: string;
+  product_name: string;
+  requested_amount: number;
+  sanctioned_amount?: number;
+  existing_lender?: string;
+  existing_roi?: number; // e.g. 0.0935 = 9.35%
+  proposed_roi?: number; // e.g. 0.0840 = 8.40%
+  handled_by: string; // "Owner" | "Staff 1"
+  primary_submission: CaseSubmission;
+  other_submissions?: CaseSubmission[];
+  next_followup_on: string | null;
+  created_at: string;
+  is_demo: boolean;
+}
+
+export interface CaseDocument {
+  id: string;
+  case_id: string;
+  name: string;
+  category: "General" | "Income" | "Property" | "Existing Loan";
+  status: "Pending" | "Requested" | "Received" | "Deficient";
+  requested_on?: string;
+  received_on?: string;
+}
+
+export const STAGE_DEFINITIONS: StageDefinition[] = [
+  { id: "st-1", name: "Enquiry Qualified", win_prob: 0.10, is_open: true, kind: "progress" },
+  { id: "st-2", name: "Docs Collection", win_prob: 0.20, is_open: true, kind: "progress" },
+  { id: "st-3", name: "Logged In (Filed)", win_prob: 0.35, is_open: true, kind: "progress" },
+  { id: "st-4", name: "Credit Processing", win_prob: 0.50, is_open: true, kind: "progress" },
+  { id: "st-5", name: "Query / Deficiency", win_prob: 0.40, is_open: true, kind: "hold" },
+  { id: "st-6", name: "Sanctioned", win_prob: 0.85, is_open: true, kind: "progress" },
+  { id: "st-7", name: "Legal / Valuation", win_prob: 0.90, is_open: true, kind: "progress" },
+  { id: "st-8", name: "Disbursement Pending", win_prob: 0.95, is_open: true, kind: "progress" },
+  { id: "st-9", name: "Disbursed", win_prob: 1.00, is_open: false, kind: "won" },
+  { id: "st-10", name: "Rejected", win_prob: 0.00, is_open: false, kind: "lost" },
+  { id: "st-11", name: "Dropped / Lost", win_prob: 0.00, is_open: false, kind: "lost" },
+];
+
 export const PRODUCTS: Product[] = [
   { id: "p-hl", name: "Home Loan", code: "HL", market_roi: 0.0850, is_secured: true },
   { id: "p-lap", name: "Loan Against Property", code: "LAP", market_roi: 0.0975, is_secured: true },
@@ -121,20 +206,6 @@ export const LENDERS: Lender[] = [
   { id: "len-tata", name: "Tata Capital", type: "NBFC", is_active: true },
   { id: "len-bob", name: "Bank of Baroda", type: "Bank", is_active: true },
   { id: "len-pnb", name: "Punjab National Bank", type: "Bank", is_active: true },
-];
-
-export const LEAD_SOURCES = [
-  "Google Business Profile",
-  "Website / Google Search",
-  "Instagram / Facebook",
-  "WhatsApp",
-  "Referral - Client",
-  "Referral - Builder/Broker",
-  "Referral - Sub-agent",
-  "Walk-in",
-  "CA Practice Client",
-  "Existing Portfolio (Takeover / Top-up)",
-  "Other",
 ];
 
 export const BANKERS: Banker[] = [
@@ -186,7 +257,7 @@ export const INITIAL_LEADS: Lead[] = [
     assigned_to: "Staff 1",
     assigned_to_id: "staff-1",
     last_contact_on: "2026-09-17",
-    next_followup_on: "2026-09-19", // Overdue relative to test date 20 Sep 2026
+    next_followup_on: "2026-09-19",
     notes: "Requires business expansion loan. 3 yrs ITR filed, GST turnover around 1.2 Cr.",
     is_demo: true,
   },
@@ -205,7 +276,7 @@ export const INITIAL_LEADS: Lead[] = [
     assigned_to: "Owner",
     assigned_to_id: "owner",
     last_contact_on: "2026-09-19",
-    next_followup_on: "2026-09-22", // Due in 2 days
+    next_followup_on: "2026-09-22",
     notes: "Purchasing apartment in Shankar Nagar. Waiting for salary slips and Form 16.",
     is_demo: true,
   },
@@ -312,5 +383,100 @@ export const INITIAL_CONTACT_LOGS: ContactLogEntry[] = [
     summary: "SAMPLE - Shared quarterly rate update on WhatsApp.",
     next_action: "Portfolio review call",
     next_action_date: "2026-09-20",
+  },
+];
+
+export const INITIAL_CASES: CaseItem[] = [
+  {
+    id: "cs-1",
+    case_code: "CS-0001",
+    client_id: "cl-1",
+    client_code: "CL-0001",
+    client_name: "SAMPLE - Raipur Traders",
+    case_type: "Fresh",
+    product_id: "p-wc",
+    product_name: "Working Capital (OD/CC)",
+    requested_amount: 4000000,
+    handled_by: "Staff 1",
+    created_at: "2026-09-10T10:00:00Z",
+    next_followup_on: "2026-09-22",
+    is_demo: true,
+    primary_submission: {
+      id: "sub-1",
+      submission_code: "CS-0001-A",
+      lender_id: "len-hdfc",
+      lender_name: "HDFC Bank",
+      banker_id: "b-1",
+      banker_name: "SAMPLE Banker A",
+      stage: "Credit Processing",
+      stage_updated_on: "2026-09-16",
+      login_date: "2026-09-14",
+      expected_disbursal_date: "2026-09-25",
+      is_primary: true,
+      notes: "Stock statement and 12-month current account statement verified.",
+    },
+  },
+  {
+    id: "cs-2",
+    case_code: "CS-0002",
+    client_id: "cl-2",
+    client_code: "CL-0002",
+    client_name: "SAMPLE - Anil Verma",
+    case_type: "Balance Transfer (Takeover)",
+    product_id: "p-hl",
+    product_name: "Home Loan",
+    requested_amount: 5500000,
+    existing_lender: "State Bank of India",
+    existing_roi: 0.0935, // 9.35%
+    proposed_roi: 0.0840, // 8.40% -> Saving ₹52,250
+    handled_by: "Owner",
+    created_at: "2026-08-25T11:30:00Z",
+    next_followup_on: "2026-09-18", // OVERDUE 2 days relative to 20 Sep 2026
+    is_demo: true,
+    primary_submission: {
+      id: "sub-2",
+      submission_code: "CS-0002-A",
+      lender_id: "len-bajaj",
+      lender_name: "Bajaj Finance",
+      banker_id: "b-2",
+      banker_name: "SAMPLE Banker B",
+      stage: "Docs Collection",
+      stage_updated_on: "2026-09-08", // 12 days in stage = STUCK (R3 > 10d)
+      expected_disbursal_date: "2026-10-15",
+      is_primary: true,
+      notes: "Awaiting SBI loan account statement and list of documents (LOD).",
+    },
+  },
+  {
+    id: "cs-3",
+    case_code: "CS-0003",
+    client_id: "cl-3",
+    client_code: "CL-0003",
+    client_name: "SAMPLE - Dr. Meera Clinic",
+    case_type: "Fresh",
+    product_id: "p-lap",
+    product_name: "Loan Against Property",
+    requested_amount: 12000000,
+    sanctioned_amount: 11000000,
+    handled_by: "Owner",
+    created_at: "2026-08-15T15:00:00Z",
+    next_followup_on: "2026-09-24",
+    is_demo: true,
+    primary_submission: {
+      id: "sub-3",
+      submission_code: "CS-0003-A",
+      lender_id: "len-hdfc",
+      lender_name: "HDFC Bank",
+      banker_id: "b-1",
+      banker_name: "SAMPLE Banker A",
+      stage: "Sanctioned",
+      stage_updated_on: "2026-09-17",
+      login_date: "2026-08-31",
+      sanctioned_amount: 11000000,
+      sanction_date: "2026-09-17",
+      expected_disbursal_date: "2026-10-08",
+      is_primary: true,
+      notes: "Sanctioned at ₹1.10 Cr. Legal and title verification underway for Civil Lines property.",
+    },
   },
 ];
