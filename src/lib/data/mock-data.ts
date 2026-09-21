@@ -524,6 +524,7 @@ export interface PayoutItem {
   gst_amount?: number;
   net_amount?: number;
   remarks?: string;
+  is_demo?: boolean;
 }
 
 export interface PayoutGridItem {
@@ -644,6 +645,7 @@ export const INITIAL_PAYOUTS: PayoutItem[] = [
     gst_amount: 0,
     net_amount: 35625,
     remarks: "Received in ICICI current account.",
+    is_demo: true,
   },
   {
     id: "pay-2",
@@ -660,6 +662,7 @@ export const INITIAL_PAYOUTS: PayoutItem[] = [
     invoice_number: "INV-2026-004",
     invoice_date: "2026-01-20",
     remarks: "Invoice submitted to HDFC DSA desk.",
+    is_demo: true,
   },
 ];
 

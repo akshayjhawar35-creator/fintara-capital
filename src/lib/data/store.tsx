@@ -108,6 +108,13 @@ export interface DataContextType {
   updateLoanReview: (loanId: string, reviewDate?: string) => void;
   updatePayout: (payoutId: string, updates: Partial<PayoutItem>) => void;
   createBTCaseFromLoan: (loanId: string) => CaseItem;
+  // Admin & Migration Actions (Phase 7)
+  purgeDemoData: () => { purgedLeads: number; purgedClients: number; purgedCases: number; purgedLoans: number; purgedPayouts: number };
+  restoreDemoData: () => void;
+  importBatch: (payload: {
+    leads?: Array<Omit<Lead, "id" | "lead_code" | "created_at" | "is_demo">>;
+    clients?: Array<Omit<Client, "id" | "client_code" | "created_at" | "is_demo" | "active_loans_count" | "open_cases_count">>;
+  }) => { importedLeads: number; importedClients: number; errors: string[] };
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -566,6 +573,69 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const purgeDemoData = () => {
+    const demoLeads = leads.filter((l) => l.is_demo).length;
+    const demoClients = clients.filter((c) => c.is_demo).length;
+    const demoCases = cases.filter((c) => c.is_demo).length;
+    const demoLoans = loans.filter((l) => l.is_demo).length;
+    const demoPayouts = payouts.filter((p) => p.is_demo).length;
+
+    setLeads((prev) => prev.filter((l) => !l.is_demo));
+    setClients((prev) => prev.filter((c) => !c.is_demo));
+    setCases((prev) => prev.filter((c) => !c.is_demo));
+    setLoans((prev) => prev.filter((l) => !l.is_demo));
+    setPayouts((prev) => prev.filter((p) => !p.is_demo));
+
+    return {
+      purgedLeads: demoLeads,
+      purgedClients: demoClients,
+      purgedCases: demoCases,
+      purgedLoans: demoLoans,
+      purgedPayouts: demoPayouts,
+    };
+  };
+
+  const restoreDemoData = () => {
+    setLeads(INITIAL_LEADS);
+    setClients(INITIAL_CLIENTS);
+    setCases(INITIAL_CASES);
+    setLoans(INITIAL_LOANS);
+    setPayouts(INITIAL_PAYOUTS);
+  };
+
+  const importBatch = (payload: {
+    leads?: Array<Omit<Lead, "id" | "lead_code" | "created_at" | "is_demo">>;
+    clients?: Array<Omit<Client, "id" | "client_code" | "created_at" | "is_demo" | "active_loans_count" | "open_cases_count">>;
+  }) => {
+    let importedLeads = 0;
+    let importedClients = 0;
+    const errors: string[] = [];
+
+    if (payload.leads && payload.leads.length > 0) {
+      payload.leads.forEach((l) => {
+        try {
+          addLead(l);
+          importedLeads++;
+        } catch (err: unknown) {
+          errors.push(`Lead ${l.name}: ${err instanceof Error ? err.message : String(err)}`);
+        }
+      });
+    }
+
+    if (payload.clients && payload.clients.length > 0) {
+      payload.clients.forEach((c) => {
+        try {
+          addClient(c);
+          importedClients++;
+        } catch (err: unknown) {
+          errors.push(`Client ${c.name}: ${err instanceof Error ? err.message : String(err)}`);
+        }
+      });
+    }
+
+    return { importedLeads, importedClients, errors };
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -599,6 +669,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         updateLoanReview,
         updatePayout,
         createBTCaseFromLoan,
+        purgeDemoData,
+        restoreDemoData,
+        importBatch,
       }}
     >
       {children}
