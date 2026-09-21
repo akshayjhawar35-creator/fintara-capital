@@ -26,7 +26,7 @@ import {
 function ClientDetailContent() {
   const searchParams = useSearchParams();
   const clientCode = searchParams.get("id") || "CL-0001";
-  const { clients, contactLogs, today, revokeConsent, addContactLog } = useData();
+  const { clients, contactLogs, loans, getLoanMath, today, revokeConsent, addContactLog } = useData();
 
   const [activeTab, setActiveTab] = useState<"overview" | "cases" | "loans" | "timeline" | "consent">("overview");
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
@@ -76,7 +76,7 @@ function ClientDetailContent() {
           amount: 5500000,
           lender: "Bajaj Finance",
           stage: "Docs Collection",
-          statusClass: "bg-yellow-100 text-yellow-800",
+          statusClass: "bg-amber-100 text-amber-800",
           disbursalDate: "2026-10-15",
         },
       ];
@@ -95,44 +95,28 @@ function ClientDetailContent() {
     ];
   }, [client]);
 
-  // Demo linked loans based on client
+  // Dynamically linked loans from central store
   const clientLoans = useMemo(() => {
-    if (client.client_code === "CL-0001") {
-      return [
-        {
-          code: "LN-0001",
-          product: "Business Loan",
-          lender: "Bajaj Finance",
-          disbursed_amt: 2500000,
-          disbursed_on: "2025-06-17",
-          roi: 0.155,
-          tenure_months: 48,
-          emi: 70212,
-          est_outstanding: 1876770,
-          account_last4: "1234",
-          status: "Active",
-        },
-      ];
-    }
-    if (client.client_code === "CL-0003") {
-      return [
-        {
-          code: "LN-0002",
-          product: "Home Loan",
-          lender: "HDFC Bank",
-          disbursed_amt: 6000000,
-          disbursed_on: "2026-01-13",
-          roi: 0.091,
-          tenure_months: 240,
-          emi: 54370,
-          est_outstanding: 5927127,
-          account_last4: "5678",
-          status: "Active",
-        },
-      ];
-    }
-    return [];
-  }, [client]);
+    return loans
+      .filter((l) => l.client_id === client.id || l.client_code === client.client_code)
+      .map((l) => {
+        const math = getLoanMath(l);
+        return {
+          code: l.loan_code,
+          product: l.product_name,
+          lender: l.lender_name,
+          disbursed_amt: l.disbursed_amount,
+          disbursed_on: l.disbursed_date,
+          roi: l.roi,
+          tenure_months: l.tenure_months,
+          emi: math.emi,
+          est_outstanding: math.estOutstanding,
+          account_last4: l.account_last4,
+          status: l.status,
+          takeover: math.takeover,
+        };
+      });
+  }, [client, loans, getLoanMath]);
 
   const handleSaveContactLog = (e: React.FormEvent) => {
     e.preventDefault();

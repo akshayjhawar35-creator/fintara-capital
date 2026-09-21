@@ -11,15 +11,22 @@ import {
   CaseSubmission,
   StageDefinition,
   StageName,
+  LoanItem,
+  PayoutItem,
+  PayoutGridItem,
   INITIAL_LEADS,
   INITIAL_CLIENTS,
   BANKERS as INITIAL_BANKERS,
   INITIAL_CONTACT_LOGS,
   INITIAL_CASES,
+  INITIAL_LOANS,
+  INITIAL_PAYOUTS,
+  INITIAL_PAYOUT_GRID,
   STAGE_DEFINITIONS,
   PRODUCTS,
   LENDERS,
 } from "./mock-data";
+import { calculateEMI, calculateOutstanding } from "@/lib/finance";
 
 export type FollowupAlert = "OVERDUE" | "DUE TODAY" | "DUE SOON" | "OK" | "NO FOLLOW-UP SET";
 
@@ -33,10 +40,38 @@ export interface CaseAlertInfo {
   btSaving?: number; // Annual saving (R6)
 }
 
+export interface LoanMathResult {
+  monthsElapsed: number;
+  emi: number;
+  estOutstanding: number;
+  isMatured: boolean;
+  takeover: {
+    isCandidate: boolean;
+    marketRoi: number | null;
+    roiGap: number;
+    estAnnualSaving: number;
+  };
+  topup: {
+    isOpen: boolean;
+    opensDateStr: string;
+  };
+  review: {
+    status: "OVERDUE" | "DUE TODAY" | "DUE SOON" | "OK";
+    daysDiff: number;
+    nextReviewDue: string;
+  };
+  payout?: PayoutItem;
+  payoutAgeingDays: number;
+  isPayoutOverdue: boolean;
+}
+
 export interface DataContextType {
   leads: Lead[];
   clients: Client[];
   cases: CaseItem[];
+  loans: LoanItem[];
+  payouts: PayoutItem[];
+  payoutGrid: PayoutGridItem[];
   bankers: Banker[];
   contactLogs: ContactLogEntry[];
   products: Product[];
@@ -67,6 +102,12 @@ export interface DataContextType {
   ) => { success: boolean; error?: string };
   updateCaseFollowup: (caseId: string, nextDate: string | null) => void;
   getCaseAlerts: (caseItem: CaseItem) => CaseAlertInfo;
+  // Portfolio & Money Actions (Phase 4)
+  getLoanMath: (loan: LoanItem) => LoanMathResult;
+  addLoan: (loan: Omit<LoanItem, "id" | "loan_code" | "is_demo">) => LoanItem;
+  updateLoanReview: (loanId: string, reviewDate?: string) => void;
+  updatePayout: (payoutId: string, updates: Partial<PayoutItem>) => void;
+  createBTCaseFromLoan: (loanId: string) => CaseItem;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -109,6 +150,27 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     return INITIAL_CASES;
   });
 
+  const [loans, setLoans] = useState<LoanItem[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_loans`);
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) { /* fallback */ }
+      }
+    }
+    return INITIAL_LOANS;
+  });
+
+  const [payouts, setPayouts] = useState<PayoutItem[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_payouts`);
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) { /* fallback */ }
+      }
+    }
+    return INITIAL_PAYOUTS;
+  });
+
+  const [payoutGrid] = useState<PayoutGridItem[]>(INITIAL_PAYOUT_GRID);
   const [bankers, setBankers] = useState<Banker[]>(INITIAL_BANKERS);
   const [contactLogs, setContactLogs] = useState<ContactLogEntry[]>(INITIAL_CONTACT_LOGS);
 
@@ -130,6 +192,18 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem(`${STORAGE_KEY}_cases`, JSON.stringify(cases));
     }
   }, [cases]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`${STORAGE_KEY}_loans`, JSON.stringify(loans));
+    }
+  }, [loans]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`${STORAGE_KEY}_payouts`, JSON.stringify(payouts));
+    }
+  }, [payouts]);
 
   // Calculate SLA Alert: R1 rule
   const getFollowupAlert = (nextFollowupOn: string | null): { alert: FollowupAlert; daysDiff: number } => {
@@ -350,12 +424,157 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  // Phase 4: Portfolio & Money Functions
+  const getLoanMath = (loan: LoanItem): LoanMathResult => {
+    // Completed months between disbursal and today
+    const start = new Date(loan.disbursed_date);
+    const curr = new Date(today);
+    let monthsElapsed = (curr.getFullYear() - start.getFullYear()) * 12 + (curr.getMonth() - start.getMonth());
+    if (curr.getDate() < start.getDate()) {
+      monthsElapsed--;
+    }
+    monthsElapsed = Math.max(0, monthsElapsed);
+
+    const emi = calculateEMI(loan.disbursed_amount, loan.roi, loan.tenure_months);
+    const estOutstanding = calculateOutstanding(
+      loan.disbursed_amount,
+      loan.roi,
+      loan.tenure_months,
+      monthsElapsed
+    );
+    const isMatured = monthsElapsed >= loan.tenure_months;
+
+    // R8: Takeover Radar
+    const prod = PRODUCTS.find(
+      (p) => p.id === loan.product_id || p.name.toLowerCase() === loan.product_name.toLowerCase()
+    );
+    const marketRoi = prod?.market_roi ?? null;
+    const roiGap = marketRoi !== null ? Math.max(0, loan.roi - marketRoi) : 0;
+    const isTakeoverCandidate =
+      loan.status === "Active" &&
+      monthsElapsed >= 6 &&
+      marketRoi !== null &&
+      roiGap >= 0.005; // 0.50 pp
+    const estAnnualSaving = isTakeoverCandidate ? Math.round(estOutstanding * roiGap) : 0;
+
+    // R9: Top-up Window
+    const topupDate = new Date(loan.disbursed_date);
+    topupDate.setMonth(topupDate.getMonth() + 12);
+    const isTopupOpen = loan.status === "Active" && curr >= topupDate;
+    const opensDateStr = topupDate.toLocaleDateString("en-IN", { month: "short", year: "numeric" });
+
+    // R10: Routine Review Due
+    const lastRev = loan.last_review_on || loan.disbursed_date;
+    const nextRev = new Date(lastRev);
+    nextRev.setMonth(nextRev.getMonth() + 6);
+    const nextRevStr = nextRev.toISOString().split("T")[0];
+    const diffTime = new Date(nextRevStr).getTime() - curr.getTime();
+    const daysDiff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    let reviewStatus: "OVERDUE" | "DUE TODAY" | "DUE SOON" | "OK" = "OK";
+    if (daysDiff < 0) {
+      reviewStatus = "OVERDUE";
+    } else if (daysDiff === 0) {
+      reviewStatus = "DUE TODAY";
+    } else if (daysDiff <= 30) {
+      reviewStatus = "DUE SOON";
+    }
+
+    // Payout details
+    const payout = payouts.find((p) => p.loan_id === loan.id || p.loan_code === loan.loan_code);
+    const disbDate = new Date(loan.disbursed_date);
+    const payoutAgeingDays = Math.max(0, Math.floor((curr.getTime() - disbDate.getTime()) / (1000 * 60 * 60 * 24)));
+    const isPayoutOverdue = !!payout && payout.status !== "Received" && payoutAgeingDays > 30;
+
+    return {
+      monthsElapsed,
+      emi,
+      estOutstanding,
+      isMatured,
+      takeover: {
+        isCandidate: isTakeoverCandidate,
+        marketRoi,
+        roiGap,
+        estAnnualSaving,
+      },
+      topup: {
+        isOpen: isTopupOpen,
+        opensDateStr,
+      },
+      review: {
+        status: reviewStatus,
+        daysDiff,
+        nextReviewDue: nextRevStr,
+      },
+      payout,
+      payoutAgeingDays,
+      isPayoutOverdue,
+    };
+  };
+
+  const addLoan = (loanData: Omit<LoanItem, "id" | "loan_code" | "is_demo">): LoanItem => {
+    const nextCode = `LN-${String(loans.length + 1).padStart(4, "0")}`;
+    const newLoan: LoanItem = {
+      ...loanData,
+      id: `ln-${Date.now()}`,
+      loan_code: nextCode,
+      is_demo: false,
+    };
+    setLoans((prev) => [newLoan, ...prev]);
+    return newLoan;
+  };
+
+  const updateLoanReview = (loanId: string, reviewDate: string = today) => {
+    setLoans((prev) =>
+      prev.map((l) => (l.id === loanId || l.loan_code === loanId ? { ...l, last_review_on: reviewDate } : l))
+    );
+  };
+
+  const updatePayout = (payoutId: string, updates: Partial<PayoutItem>) => {
+    setPayouts((prev) =>
+      prev.map((p) => (p.id === payoutId ? { ...p, ...updates } : p))
+    );
+  };
+
+  const createBTCaseFromLoan = (loanId: string): CaseItem => {
+    const loan = loans.find((l) => l.id === loanId || l.loan_code === loanId);
+    if (!loan) throw new Error("Loan not found");
+    const math = getLoanMath(loan);
+
+    return addCase({
+      client_id: loan.client_id,
+      client_code: loan.client_code,
+      client_name: loan.client_name,
+      case_type: "Balance Transfer (Takeover)",
+      product_id: loan.product_id,
+      product_name: loan.product_name,
+      requested_amount: math.estOutstanding,
+      existing_lender: loan.lender_name,
+      existing_roi: loan.roi,
+      proposed_roi: math.takeover.marketRoi || 0.0840,
+      handled_by: loan.handled_by || "Owner",
+      next_followup_on: today,
+      primary_submission: {
+        id: `sub-${Date.now()}`,
+        submission_code: `CS-${String(cases.length + 1).padStart(4, "0")}-A`,
+        lender_id: "len-bajaj",
+        lender_name: "Bajaj Finance",
+        stage: "Enquiry Qualified",
+        stage_updated_on: today,
+        is_primary: true,
+        notes: `Balance transfer created from existing portfolio loan ${loan.loan_code} (${loan.lender_name}). Existing rate: ${(loan.roi * 100).toFixed(2)}%, Market Benchmark: ${((math.takeover.marketRoi || 0.084) * 100).toFixed(2)}%. Est annual saving: ₹${math.takeover.estAnnualSaving.toLocaleString("en-IN")}.`,
+      },
+    });
+  };
+
   return (
     <DataContext.Provider
       value={{
         leads,
         clients,
         cases,
+        loans,
+        payouts,
+        payoutGrid,
         bankers,
         contactLogs,
         products: PRODUCTS,
@@ -375,6 +594,11 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         updateCaseStage,
         updateCaseFollowup,
         getCaseAlerts,
+        getLoanMath,
+        addLoan,
+        updateLoanReview,
+        updatePayout,
+        createBTCaseFromLoan,
       }}
     >
       {children}

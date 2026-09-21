@@ -122,8 +122,8 @@ export interface CaseSubmission {
   submission_code: string; // e.g. CS-0001-A
   lender_id: string;
   lender_name: string;
-  banker_id: string;
-  banker_name: string;
+  banker_id?: string;
+  banker_name?: string;
   stage: StageName;
   stage_updated_on: string;
   login_date?: string;
@@ -480,3 +480,186 @@ export const INITIAL_CASES: CaseItem[] = [
     },
   },
 ];
+
+export interface LoanItem {
+  id: string;
+  loan_code: string; // e.g. "LN-0001"
+  client_id: string;
+  client_code: string;
+  client_name: string;
+  product_id: string;
+  product_name: string;
+  lender_id: string;
+  lender_name: string;
+  banker_id?: string;
+  banker_name?: string;
+  account_last4: string;
+  disbursed_amount: number;
+  disbursed_date: string; // YYYY-MM-DD
+  roi: number; // e.g. 0.155 = 15.5%
+  tenure_months: number;
+  status: "Active" | "Closed – Repaid" | "Closed – Moved by Us (BT)" | "Lost to Competitor";
+  last_review_on?: string;
+  handled_by: string;
+  is_demo: boolean;
+}
+
+export interface PayoutItem {
+  id: string;
+  loan_id: string;
+  loan_code: string;
+  client_name: string;
+  lender_name: string;
+  product_name: string;
+  disbursed_amount: number;
+  disbursed_date: string;
+  payout_percentage: number; // e.g. 0.015 = 1.5%
+  expected_amount: number;
+  status: "Not Claimed" | "Claimed" | "Received" | "Disputed";
+  invoice_number?: string;
+  invoice_date?: string;
+  received_date?: string;
+  gross_amount?: number;
+  tds_amount?: number;
+  gst_amount?: number;
+  net_amount?: number;
+  remarks?: string;
+}
+
+export interface PayoutGridItem {
+  id: string;
+  lender_id: string;
+  lender_name: string;
+  product_id: string;
+  product_name: string;
+  case_type?: string;
+  payout_percentage: number;
+  valid_from: string;
+}
+
+export const INITIAL_PAYOUT_GRID: PayoutGridItem[] = [
+  {
+    id: "pg-1",
+    lender_id: "len-hdfc",
+    lender_name: "HDFC Bank",
+    product_id: "p-lap",
+    product_name: "Loan Against Property",
+    payout_percentage: 0.006, // 0.60%
+    valid_from: "2026-04-01",
+  },
+  {
+    id: "pg-2",
+    lender_id: "len-hdfc",
+    lender_name: "HDFC Bank",
+    product_id: "p-hl",
+    product_name: "Home Loan",
+    payout_percentage: 0.004, // 0.40%
+    valid_from: "2026-04-01",
+  },
+  {
+    id: "pg-3",
+    lender_id: "len-bajaj",
+    lender_name: "Bajaj Finance",
+    product_id: "p-bl",
+    product_name: "Business Loan",
+    payout_percentage: 0.015, // 1.50%
+    valid_from: "2026-04-01",
+  },
+  {
+    id: "pg-4",
+    lender_id: "len-hdfc",
+    lender_name: "HDFC Bank",
+    product_id: "p-wc",
+    product_name: "Working Capital (OD/CC)",
+    payout_percentage: 0.010, // 1.00%
+    valid_from: "2026-04-01",
+  },
+];
+
+export const INITIAL_LOANS: LoanItem[] = [
+  {
+    id: "ln-1",
+    loan_code: "LN-0001",
+    client_id: "cl-1",
+    client_code: "CL-0001",
+    client_name: "SAMPLE - Raipur Traders",
+    product_id: "p-bl",
+    product_name: "Business Loan",
+    lender_id: "len-bajaj",
+    lender_name: "Bajaj Finance",
+    banker_id: "b-2",
+    banker_name: "SAMPLE Banker B",
+    account_last4: "1234",
+    disbursed_amount: 2500000,
+    disbursed_date: "2025-06-17",
+    roi: 0.155, // 15.5% -> App7: 15 mos, EMI ₹70,212, Outstanding ₹18,76,770
+    tenure_months: 48,
+    status: "Active",
+    last_review_on: "2026-03-15",
+    handled_by: "Owner",
+    is_demo: true,
+  },
+  {
+    id: "ln-2",
+    loan_code: "LN-0002",
+    client_id: "cl-3",
+    client_code: "CL-0003",
+    client_name: "SAMPLE - Dr. Meera Clinic",
+    product_id: "p-hl",
+    product_name: "Home Loan",
+    lender_id: "len-hdfc",
+    lender_name: "HDFC Bank",
+    banker_id: "b-1",
+    banker_name: "SAMPLE Banker A",
+    account_last4: "5678",
+    disbursed_amount: 6000000,
+    disbursed_date: "2026-01-13",
+    roi: 0.091, // 9.1% -> App7: 8 mos, EMI ₹54,370, Outstanding ₹59,27,127
+    tenure_months: 240,
+    status: "Active",
+    last_review_on: "2026-03-20",
+    handled_by: "Owner",
+    is_demo: true,
+  },
+];
+
+export const INITIAL_PAYOUTS: PayoutItem[] = [
+  {
+    id: "pay-1",
+    loan_id: "ln-1",
+    loan_code: "LN-0001",
+    client_name: "SAMPLE - Raipur Traders",
+    lender_name: "Bajaj Finance",
+    product_name: "Business Loan",
+    disbursed_amount: 2500000,
+    disbursed_date: "2025-06-17",
+    payout_percentage: 0.015,
+    expected_amount: 37500,
+    status: "Received",
+    invoice_number: "INV-2025-019",
+    invoice_date: "2025-06-25",
+    received_date: "2025-07-07",
+    gross_amount: 37500,
+    tds_amount: 1875,
+    gst_amount: 0,
+    net_amount: 35625,
+    remarks: "Received in ICICI current account.",
+  },
+  {
+    id: "pay-2",
+    loan_id: "ln-2",
+    loan_code: "LN-0002",
+    client_name: "SAMPLE - Dr. Meera Clinic",
+    lender_name: "HDFC Bank",
+    product_name: "Home Loan",
+    disbursed_amount: 6000000,
+    disbursed_date: "2026-01-13",
+    payout_percentage: 0.004,
+    expected_amount: 24000,
+    status: "Claimed",
+    invoice_number: "INV-2026-004",
+    invoice_date: "2026-01-20",
+    remarks: "Invoice submitted to HDFC DSA desk.",
+  },
+];
+
