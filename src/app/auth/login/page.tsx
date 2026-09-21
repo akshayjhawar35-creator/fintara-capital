@@ -151,6 +151,35 @@ export default function LoginPage() {
               </button>
             </div>
           </form>
+
+          {/* Quick Demo Logins per Spec App6 */}
+          <div className="mt-6 border-t border-slate/15 pt-5">
+            <p className="text-xs font-medium text-slate text-center mb-3">
+              Quick Sign-in (Demo / Dev Mode)
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={async () => {
+                  await signIn("owner@fintara.test", "DemoAdminPass123");
+                  router.push("/app/");
+                }}
+                className="px-3 py-2 text-xs font-semibold rounded border border-midnight text-midnight hover:bg-midnight hover:text-white transition-colors text-center"
+              >
+                Admin (Owner)
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  await signIn("staff1@fintara.test", "DemoStaffPass123");
+                  router.push("/app/");
+                }}
+                className="px-3 py-2 text-xs font-semibold rounded border border-teal text-teal hover:bg-teal hover:text-white transition-colors text-center"
+              >
+                Staff 1
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

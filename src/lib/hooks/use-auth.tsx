@@ -60,11 +60,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Get initial session
     getSupabase().auth.getSession().then(async ({ data: { session: s } }) => {
-      setSession(s);
-      setUser(s?.user ?? null);
       if (s?.user) {
+        setSession(s);
+        setUser(s.user);
         const p = await fetchProfile(s.user.id);
         setProfile(p);
+      } else if (typeof window !== "undefined") {
+        const savedDemo = localStorage.getItem("fintara_demo_user");
+        if (savedDemo) {
+          try {
+            const parsed = JSON.parse(savedDemo);
+            setUser(parsed.user);
+            setProfile(parsed.profile);
+          } catch (e) { /* ignore */ }
+        }
       }
       setIsLoading(false);
     });
@@ -102,15 +111,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = useCallback(
     async (email: string, password: string): Promise<{ error: string | null }> => {
-      const { error } = await getSupabase().auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        return { error: error.message };
+      // Demo dev accounts support (SPEC App6)
+      if (email === "owner@fintara.test" || email === "staff1@fintara.test" || email.endsWith("@fintara.test")) {
+        const isOwner = email.includes("owner");
+        const demoUser = {
+          id: isOwner ? "owner-uuid" : "staff-1-uuid",
+          email,
+          app_metadata: {},
+          user_metadata: {},
+          aud: "authenticated",
+          created_at: new Date().toISOString(),
+        } as unknown as User;
+        const demoProfile: Profile = {
+          id: demoUser.id,
+          full_name: isOwner ? "Owner (Admin)" : "Staff 1",
+          email,
+          mobile: isOwner ? "9800000001" : "9800000002",
+          role: isOwner ? "admin" : "staff",
+          team_label: isOwner ? "Owner" : "Staff 1",
+          is_active: true,
+        };
+        setUser(demoUser);
+        setProfile(demoProfile);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("fintara_demo_user", JSON.stringify({ user: demoUser, profile: demoProfile }));
+        }
+        return { error: null };
       }
-      return { error: null };
+
+      try {
+        const { error } = await getSupabase().auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          return { error: error.message };
+        }
+        return { error: null };
+      } catch (err: any) {
+        return { error: err?.message || "Authentication service unavailable." };
+      }
     },
     []
   );
