@@ -1,49 +1,56 @@
 @import "tailwindcss";
 
 /*
- * Fintara Capital — Design Tokens
- * ================================
- * Named colour system from spec A4.
- * Light theme only in v1.
+ * Fintara Capital — Design Tokens (Ultra-Premium Fintech Palette)
+ * ==============================================================
+ * Deep Obsidian Navy, Sovereign Trust Emerald, Champagne Gold,
+ * Pristine Slate Surfaces & Glassmorphic Elevation.
  */
 
 @theme {
   /* ── Brand Palette ── */
-  --color-midnight: #101A3D;
-  --color-gold: #E2A62B;
-  --color-teal: #1B7F8E;
-  --color-paper: #F7F8FB;
+  --color-midnight: #0A1128;      /* Deep Obsidian Navy */
+  --color-midnight-light: #162044;
+  --color-gold: #D4AF37;          /* Refined Champagne Gold */
+  --color-gold-light: #F3DE8A;
+  --color-emerald: #0D9488;       /* Sovereign Trust Emerald */
+  --color-emerald-light: #10B981;
+  --color-teal: #0D9488;          /* Main Action Teal/Emerald */
+  --color-paper: #F8FAFC;         /* Pristine Fintech Slate Background */
   --color-surface: #FFFFFF;
-  --color-slate: #475069;
+  --color-slate: #475569;         /* High-legibility body slate */
+  --color-slate-light: #64748B;
+  --color-card-border: #E2E8F0;
 
-  /* ── Alert Colours (workbook meanings) ── */
+  /* ── Alert Colours (Operational Meanings) ── */
   --color-alert-overdue: #DC2626;       /* red-600 */
-  --color-alert-due-today: #F97316;     /* orange-500 */
+  --color-alert-due-today: #EA580C;     /* orange-600 */
   --color-alert-due-soon-bg: #FEF9C3;  /* yellow-100 */
-  --color-alert-due-soon-fg: #713F12;  /* yellow-900 */
+  --color-alert-due-soon-fg: #854D0E;  /* yellow-800 */
   --color-alert-ok-bg: #DCFCE7;        /* green-100 */
   --color-alert-ok-fg: #166534;        /* green-800 */
-  --color-alert-takeover-bg: #DBEAFE;  /* blue-100 */
-  --color-alert-takeover-fg: #1E40AF;  /* blue-800 */
-  --color-alert-topup-bg: #F3E8FF;     /* purple-100 */
-  --color-alert-topup-fg: #6B21A8;     /* purple-800 */
-  --color-alert-stuck-bg: #334155;     /* slate-700 */
+  --color-alert-takeover-bg: #EFF6FF;  /* blue-50 */
+  --color-alert-takeover-fg: #1D4ED8;  /* blue-700 */
+  --color-alert-topup-bg: #FAF5FF;     /* purple-50 */
+  --color-alert-topup-fg: #7E22CE;     /* purple-700 */
+  --color-alert-stuck-bg: #1E293B;     /* slate-800 */
   --color-alert-stuck-fg: #FFFFFF;
 
   /* ── Typography ── */
-  --font-sans: var(--font-ibm-plex-sans), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-newsreader), "Newsreader", ui-serif, Georgia, serif;
+  --font-sans: var(--font-ibm-plex-sans), "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-newsreader), "Newsreader", Georgia, Cambria, serif;
 
-  /* ── Spacing scale (rem-based) ── */
+  /* ── Spacing scale ── */
   --spacing-sidebar: 15rem;       /* 240px */
   --spacing-sidebar-collapsed: 4rem; /* 64px */
   --spacing-topbar: 3.5rem;       /* 56px */
 
   /* ── Border radius ── */
-  --radius-sm: 0.25rem;
+  --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
 }
 
 /*
@@ -55,6 +62,7 @@ html {
   background-color: var(--color-paper);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -63,7 +71,6 @@ body {
 
 /*
  * ── Tabular Numerals for Financial Data ──
- * Applied globally to elements that display money or percentages.
  */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
@@ -71,10 +78,9 @@ body {
 
 /*
  * ── Focus Ring ──
- * Visible keyboard focus for accessibility.
  */
 :focus-visible {
-  outline: 2px solid var(--color-teal);
+  outline: 2px solid var(--color-emerald);
   outline-offset: 2px;
 }
 
@@ -93,7 +99,7 @@ body {
 }
 
 /*
- * ── Scrollbar Styling (webkit) ──
+ * ── Scrollbar Styling ──
  */
 ::-webkit-scrollbar {
   width: 6px;
@@ -105,14 +111,30 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-slate);
-  border-radius: 3px;
-  opacity: 0.4;
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
 }
 
 /*
- * ── Line length constraint for readability ──
+ * ── Fintech Utility Classes ──
  */
-.prose-readable {
-  max-width: 80ch;
+.fintech-gradient-hero {
+  background: radial-gradient(circle at 85% 15%, rgba(13, 148, 136, 0.25) 0%, rgba(10, 17, 40, 0.98) 60%, #0A1128 100%);
+}
+
+.fintech-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 1px 3px 0 rgba(10, 17, 40, 0.03), 0 1px 2px -1px rgba(10, 17, 40, 0.03);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fintech-card:hover {
+  border-color: rgba(13, 148, 136, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(10, 17, 40, 0.06), 0 8px 10px -6px rgba(10, 17, 40, 0.04);
+  transform: translateY(-1px);
 }

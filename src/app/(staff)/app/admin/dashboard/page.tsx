@@ -24,7 +24,7 @@ import {
 
 export default function AdminDashboardPage() {
   const { isAdmin } = useAuth();
-  const { leads, cases, loans, payouts, today, getLoanMath, getCaseAlerts } = useData();
+  const { leads, cases, loans, payouts, contactLogs, today, getLoanMath, getCaseAlerts } = useData();
 
   // Metrics aggregation
   const metrics = useMemo(() => {
@@ -119,6 +119,41 @@ export default function AdminDashboardPage() {
         <div className="text-xs text-slate">
           Snapshot as of: <strong className="text-midnight">{formatDate(today)}</strong>
         </div>
+      </div>
+
+      {/* Admin Fast Operational Links Bar */}
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-slate font-semibold text-[11px] uppercase tracking-wider mr-1">Admin Tools:</span>
+        <Link
+          href="/app/admin/reports/"
+          className="px-3.5 py-1.5 bg-surface hover:bg-paper text-midnight rounded-xl border border-slate/20 font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
+        >
+          <span>📈</span> Reports &amp; Banker TAT
+        </Link>
+        <Link
+          href="/app/admin/audit/"
+          className="px-3.5 py-1.5 bg-surface hover:bg-paper text-midnight rounded-xl border border-slate/20 font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
+        >
+          <span>🛡️</span> Audit Trail Inspector
+        </Link>
+        <Link
+          href="/app/admin/team/"
+          className="px-3.5 py-1.5 bg-surface hover:bg-paper text-midnight rounded-xl border border-slate/20 font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
+        >
+          <span>👥</span> Team Quotas &amp; Targets
+        </Link>
+        <Link
+          href="/app/admin/payouts/"
+          className="px-3.5 py-1.5 bg-surface hover:bg-paper text-midnight rounded-xl border border-slate/20 font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
+        >
+          <span>💰</span> Payout Reconciliation
+        </Link>
+        <Link
+          href="/app/admin/settings/"
+          className="px-3.5 py-1.5 bg-surface hover:bg-paper text-midnight rounded-xl border border-slate/20 font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
+        >
+          <span>⚙️</span> Excel Import &amp; Purge
+        </Link>
       </div>
 
       {/* Target Progress Bar (Rule R26) */}
@@ -355,6 +390,46 @@ export default function AdminDashboardPage() {
               </span>
             </Link>
           </div>
+        </div>
+      </div>
+
+      {/* Live Operational Updates Feed */}
+      <div className="bg-surface rounded-2xl border border-slate/15 p-6 shadow-xs space-y-4">
+        <div className="flex items-center justify-between border-b border-slate/10 pb-3">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-emerald" />
+            <h2 className="font-serif text-base font-bold text-midnight">
+              Recent Team Activity &amp; Updates Feed
+            </h2>
+          </div>
+          <Link href="/app/contacts/" className="text-xs font-semibold text-emerald hover:underline">
+            View Complete Contact History &rarr;
+          </Link>
+        </div>
+
+        <div className="divide-y divide-slate/10 text-xs">
+          {contactLogs.slice(0, 4).map((entry) => (
+            <div key={entry.id} className="py-3 flex items-start justify-between gap-4">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-midnight">{entry.client_name}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-paper border border-slate/15 text-slate font-medium">
+                    {entry.contact_type}
+                  </span>
+                  {entry.linked_case_code && (
+                    <span className="text-[10px] font-mono text-teal font-medium">
+                      {entry.linked_case_code}
+                    </span>
+                  )}
+                </div>
+                <p className="text-slate text-[11px]">{entry.summary}</p>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-[10px] text-slate block">{entry.date}</span>
+                <span className="text-[10px] text-midnight font-medium">By {entry.handled_by}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

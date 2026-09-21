@@ -1,49 +1,50 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  Building2,
+  UserCheck,
+  Zap,
   ShieldCheck,
   CheckCircle2,
   HelpCircle,
   ArrowRight,
-  TrendingUp,
-  FileCheck,
-  Globe2,
+  Clock,
+  Sparkles,
+  FileText,
 } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 export const metadata = {
-  title: "Loan Against Property (LAP) in India | Mortgage Advisory | Fintara Capital",
+  title: "Personal Loans in India | Fast Disbursal & Zero Collateral | Fintara Capital",
   description:
-    "Unlock equity from your residential, commercial, or industrial property across India. Long tenures up to 20 years, high-ticket sanctions up to ₹15+ Crore, and tailored multi-bank structuring.",
+    "Apply for instant personal loans across India. Up to ₹40 Lakhs with flexible tenures up to 5 years. Zero collateral, minimal paperwork, and multi-bank comparison with Fintara.",
 };
 
-export default function LAPPage() {
+export default function PersonalLoanPage() {
   const faqData = {
     "@type": "FAQPage",
     mainEntity: [
       {
         "@type": "Question",
-        name: "What is a Loan Against Property (LAP)?",
+        name: "Who is eligible for a personal loan through Fintara Capital?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "A Loan Against Property (LAP), also known as a mortgage loan, is a secured borrowing facility where you pledge an unencumbered residential, commercial, or industrial property to obtain substantial capital. The funds can be utilized for business expansion, debt consolidation, machinery purchase, or major personal expenditures.",
+          text: "Salaried employees in private or public sector companies, self-employed professionals (Doctors, CAs, Architects), and business owners with a stable banking track record and a minimum CIBIL score of 680+ are eligible.",
         },
       },
       {
         "@type": "Question",
-        name: "How much loan amount can I get against my property?",
+        name: "How much loan amount can I avail under a personal loan?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Sanctions typically range from 50% to 65% of your property's fair market valuation (Loan-to-Value or LTV), combined with your business income and debt servicing ability. Ticket sizes range from ₹25 Lakhs to ₹15+ Crore across our 18+ partner banks.",
+          text: "Personal loan sanctions range from ₹1,00,000 up to ₹40,00,000 depending on your net take-home salary, employer category, existing EMI commitments, and credit repayment history.",
         },
       },
       {
         "@type": "Question",
-        name: "What property documents are required for a standard LAP application?",
+        name: "Can I use a personal loan for debt consolidation?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Lenders typically require a clean copy of the Title Deed / Sale Deed, sanctioned municipal layout or building plan, latest property tax receipt, and prior chain documents verifying ownership.",
+          text: "Yes. Many borrowers use personal loans to consolidate multiple high-interest credit card dues or short-term borrowings into a single, manageable monthly EMI at a lower overall interest burden.",
         },
       },
     ],
@@ -65,8 +66,8 @@ export default function LAPPage() {
           <nav className="flex items-center gap-6 text-xs sm:text-sm font-medium text-slate">
             <Link href="/" className="hover:text-emerald transition-colors">Home</Link>
             <Link href="/loans/secured-loans/" className="hover:text-emerald transition-colors">Secured</Link>
-            <Link href="/loans/home-loan/" className="hover:text-emerald transition-colors">Home Loans</Link>
-            <Link href="/balance-transfer/" className="hover:text-emerald transition-colors">Balance Transfer</Link>
+            <Link href="/loans/unsecured-loans/" className="hover:text-emerald transition-colors">Unsecured</Link>
+            <Link href="/calculators/emi/" className="hover:text-emerald transition-colors">EMI Calculator</Link>
             <Link
               href="/auth/login/"
               className="bg-midnight text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-midnight/90 transition-colors"
@@ -81,86 +82,67 @@ export default function LAPPage() {
       <section className="fintech-gradient-hero text-white py-16 md:py-24 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold border border-emerald-500/30">
-            <Building2 className="w-3.5 h-3.5" />
-            Pan-India Mortgage Loan Advisory
+            <UserCheck className="w-3.5 h-3.5" />
+            Fast Personal Financing Across India
           </div>
           <h1 className="font-serif text-3xl sm:text-5xl font-semibold leading-tight">
-            Loan Against Property: Unlock Your Real Estate Equity
+            Personal Loans: Zero Collateral, Maximum Flexibility
           </h1>
           <p className="text-white/80 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Turn residential, commercial, or industrial real estate into low-cost growth capital. We structure high-ticket sanctions with comfortable repayment tenures across 18+ national banks.
+            Borrow from ₹1 Lakh to ₹40 Lakhs for personal milestones, medical requirements, or debt consolidation. We compare underwriting criteria across 18+ national lenders for rapid approval.
           </p>
           <div className="pt-2">
             <Link
               href="/apply/"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gold text-midnight text-xs sm:text-sm font-semibold rounded-xl hover:bg-gold/90 transition-all shadow-sm"
             >
-              Request LAP Evaluation
+              Apply for Personal Loan
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Core Advantages */}
+      {/* Key Benefits */}
       <section className="py-16 px-4 max-w-6xl mx-auto space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-midnight">
-            Why Opt for a Mortgage Loan (LAP)?
+            Key Personal Loan Advantages
           </h2>
           <p className="text-xs sm:text-sm text-slate">
-            Unlike short-term business loans that strain monthly liquidity, LAP distributes capital repayment over a long horizon at substantially lower borrowing costs.
+            Tailored repayment solutions designed around your monthly income and cash flow.
           </p>
         </div>
 
         <div className="grid sm:grid-cols-3 gap-6">
           <div className="fintech-card p-6 rounded-2xl space-y-3">
             <div className="w-10 h-10 rounded-xl bg-emerald/10 text-emerald flex items-center justify-center font-bold">
-              1
+              <Zap className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-midnight text-base">High-Ticket Financing</h3>
+            <h3 className="font-semibold text-midnight text-base">Swift 24-Hour Sanction</h3>
             <p className="text-xs text-slate leading-relaxed">
-              Borrow from ₹25 Lakhs up to ₹15+ Crore based on property valuation and debt-service coverage ratio.
+              Paperless digital verification enables select partner banks to issue approval letters and disburse funds within 24 to 48 hours.
             </p>
           </div>
 
           <div className="fintech-card p-6 rounded-2xl space-y-3">
             <div className="w-10 h-10 rounded-xl bg-gold/10 text-gold flex items-center justify-center font-bold">
-              2
+              <ShieldCheck className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-midnight text-base">Extended Tenures (15–20 Years)</h3>
+            <h3 className="font-semibold text-midnight text-base">No Security Required</h3>
             <p className="text-xs text-slate leading-relaxed">
-              Longer repayment schedules keep your monthly EMI commitments low and manageable compared to 3-year unsecured debt.
+              100% unsecured borrowing. You do not need to pledge property, fixed deposits, gold, or arrange third-party guarantors.
             </p>
           </div>
 
           <div className="fintech-card p-6 rounded-2xl space-y-3">
             <div className="w-10 h-10 rounded-xl bg-midnight/5 text-midnight flex items-center justify-center font-bold">
-              3
+              <Clock className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-midnight text-base">Flexible End-Use</h3>
+            <h3 className="font-semibold text-midnight text-base">Flexible Tenures (1 to 5 Years)</h3>
             <p className="text-xs text-slate leading-relaxed">
-              Funds can be deployed for business expansion, purchasing commercial equipment, vendor payments, or personal family needs.
+              Choose your repayment timeline from 12 to 60 months with convenient auto-debit (NACH/e-Mandate) facilities.
             </p>
-          </div>
-        </div>
-
-        {/* Accepted Property Types */}
-        <div className="fintech-card p-8 rounded-2xl space-y-6">
-          <h3 className="font-serif text-xl font-semibold text-midnight">Eligible Property Categories</h3>
-          <div className="grid sm:grid-cols-3 gap-6 text-xs text-slate">
-            <div className="p-4 bg-paper rounded-xl border border-slate/10 space-y-1.5">
-              <span className="font-semibold text-midnight text-sm block">Residential Properties</span>
-              <p>Self-occupied houses, independent villas, or rented apartments in recognized municipal development zones.</p>
-            </div>
-            <div className="p-4 bg-paper rounded-xl border border-slate/10 space-y-1.5">
-              <span className="font-semibold text-midnight text-sm block">Commercial Real Estate</span>
-              <p>Approved office spaces, retail shops, business showrooms, and commercial shopping complexes.</p>
-            </div>
-            <div className="p-4 bg-paper rounded-xl border border-slate/10 space-y-1.5">
-              <span className="font-semibold text-midnight text-sm block">Industrial Units &amp; Warehouses</span>
-              <p>Manufacturing sheds, industrial plots, and warehousing premises with proper industrial development board clearances.</p>
-            </div>
           </div>
         </div>
 
@@ -168,48 +150,39 @@ export default function LAPPage() {
         <div className="bg-surface rounded-2xl border border-slate/15 p-8 shadow-xs space-y-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-midnight text-gold flex items-center justify-center">
-              <FileCheck className="w-5 h-5" />
+              <FileText className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-serif text-xl font-semibold text-midnight">Standard LAP Document Checklist</h3>
-              <p className="text-xs text-slate">Simplified documentation bundle for file evaluation</p>
+              <h3 className="font-serif text-xl font-semibold text-midnight">Standard Personal Loan Checklist</h3>
+              <p className="text-xs text-slate">Simple requirements to begin processing</p>
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-4 gap-6 text-xs text-slate">
+          <div className="grid sm:grid-cols-3 gap-6 text-xs text-slate">
             <div className="p-4 bg-paper rounded-xl border border-slate/10 space-y-2">
-              <span className="font-semibold text-midnight text-sm block">1. Borrower KYC</span>
+              <span className="font-semibold text-midnight text-sm block">1. Basic KYC</span>
               <ul className="space-y-1">
-                <li>&bull; PAN Card (Applicant &amp; Co-applicant)</li>
-                <li>&bull; Aadhaar / Passport address proof</li>
-                <li>&bull; Photographs</li>
+                <li>&bull; PAN Card copy</li>
+                <li>&bull; Aadhaar / Passport address verification</li>
+                <li>&bull; Passport photograph</li>
               </ul>
             </div>
 
             <div className="p-4 bg-paper rounded-xl border border-slate/10 space-y-2">
-              <span className="font-semibold text-midnight text-sm block">2. Income Verification</span>
+              <span className="font-semibold text-midnight text-sm block">2. Proof of Income</span>
               <ul className="space-y-1">
-                <li>&bull; Last 3 years ITR &amp; Computation</li>
-                <li>&bull; Audited Financials with schedules (Business)</li>
-                <li>&bull; Salary slips &amp; Form 16 (Salaried)</li>
+                <li>&bull; Last 3 months salary slips (Salaried)</li>
+                <li>&bull; Last 2 years ITR with computation (Self-employed)</li>
+                <li>&bull; Form 16 / Company appointment letter</li>
               </ul>
             </div>
 
             <div className="p-4 bg-paper rounded-xl border border-slate/10 space-y-2">
-              <span className="font-semibold text-midnight text-sm block">3. Bank Statements</span>
+              <span className="font-semibold text-midnight text-sm block">3. Banking &amp; Credit</span>
               <ul className="space-y-1">
-                <li>&bull; Last 12 months primary operative account</li>
-                <li>&bull; Sanction letters of existing debts</li>
-                <li>&bull; GSTR filings for business files</li>
-              </ul>
-            </div>
-
-            <div className="p-4 bg-paper rounded-xl border border-slate/10 space-y-2">
-              <span className="font-semibold text-midnight text-sm block">4. Property Title</span>
-              <ul className="space-y-1">
-                <li>&bull; Copy of Registered Sale Deed / Title Deed</li>
-                <li>&bull; Approved building plan / layout</li>
-                <li>&bull; Latest property tax receipt</li>
+                <li>&bull; Last 6 months salary / operative bank statement</li>
+                <li>&bull; Active CIBIL report (680+ preferred)</li>
+                <li>&bull; Proof of existing loan EMIs (if any)</li>
               </ul>
             </div>
           </div>
@@ -237,7 +210,7 @@ export default function LAPPage() {
             href="/apply/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-midnight text-white text-xs sm:text-sm font-semibold rounded-xl hover:bg-midnight/90 shadow-sm transition-all"
           >
-            Apply for Loan Against Property
+            Check Your Personal Loan Eligibility
             <ArrowRight className="w-4 h-4 text-gold" />
           </Link>
         </div>

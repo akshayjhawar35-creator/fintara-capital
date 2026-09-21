@@ -121,8 +121,39 @@ export default function AdminReportsPage() {
     ];
   }, []);
 
-  // Download CSV Simulation
+  // Download Real CSV
   const handleExportCSV = (reportName: string) => {
+    let csvHeader = "";
+    let csvRows = "";
+    const filename = `fintara_report_${reportName}.csv`;
+
+    if (reportName === "banker_tat") {
+      csvHeader = "BankerName,Lender,Branch,AgreedTAT,ActiveFiles,TotalVolume";
+      csvRows = bankerReportData
+        .map((b) => `"${b.name}","${b.lender_name}","${b.branch_city}","${b.avgTatDays} days",${b.activeCount},${b.totalVolume}`)
+        .join("\n");
+    } else if (reportName === "referrers") {
+      csvHeader = "ReferrerName,Category,LeadsReferred,CasesLogged,DisbursedVolume,CommissionPaid,Status";
+      csvRows = referrerReportData
+        .map((r) => `"${r.name}","${r.category}",${r.leadsReferred},${r.casesLogged},${r.disbursedVolume},${r.commissionPaid},"${r.status}"`)
+        .join("\n");
+    } else {
+      csvHeader = "DropReason,LostToCompetitor,CasesCount,LostVolume,Product";
+      csvRows = lostBusinessData
+        .map((l) => `"${l.reason}","${l.competitor}",${l.casesCount},${l.lostVolume},"${l.product}"`)
+        .join("\n");
+    }
+
+    const csvContent = `${csvHeader}\n${csvRows}\n`;
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
     setDownloadSuccess(`Exported "${reportName}" to CSV successfully.`);
     setTimeout(() => setDownloadSuccess(null), 3000);
   };

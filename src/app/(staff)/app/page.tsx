@@ -228,7 +228,7 @@ export default function MyDayPage() {
             Good morning, {staffName}.
           </h1>
           <p className="text-xs text-slate mt-0.5">
-            System Date: <strong className="text-midnight">{formatDate(today)}</strong> (Asia/Kolkata) • Morning 10-minute triage routine
+            System Date: <strong className="text-midnight">{formatDate(today)}</strong> (Asia/Kolkata) • Pan-India Loan Operations
           </p>
         </div>
 
@@ -268,6 +268,61 @@ export default function MyDayPage() {
             )}
           </span>
         </div>
+      </div>
+
+      {/* Fintech Market Benchmark & Notice Ticker */}
+      <div className="grid sm:grid-cols-4 gap-3 text-xs">
+        <div className="p-3 bg-surface rounded-xl border border-slate/15 flex items-center justify-between shadow-2xs">
+          <span className="text-slate font-medium">RBI Repo Rate</span>
+          <span className="font-mono font-bold text-midnight bg-paper px-2 py-0.5 rounded">6.50% (Neutral)</span>
+        </div>
+        <div className="p-3 bg-surface rounded-xl border border-slate/15 flex items-center justify-between shadow-2xs">
+          <span className="text-slate font-medium">SBI EBLR Benchmark</span>
+          <span className="font-mono font-bold text-emerald bg-emerald-50 px-2 py-0.5 rounded">9.15%</span>
+        </div>
+        <div className="p-3 bg-surface rounded-xl border border-slate/15 flex items-center justify-between shadow-2xs">
+          <span className="text-slate font-medium">HDFC RLLR Benchmark</span>
+          <span className="font-mono font-bold text-midnight bg-paper px-2 py-0.5 rounded">9.05%</span>
+        </div>
+        <div className="p-3 bg-surface rounded-xl border border-slate/15 flex items-center justify-between shadow-2xs">
+          <span className="text-slate font-medium">Standard Login SLA</span>
+          <span className="font-mono font-bold text-teal bg-teal/10 px-2 py-0.5 rounded">48 Hours Target</span>
+        </div>
+      </div>
+
+      {/* Quick Fintech Operational Links Bar */}
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-slate font-semibold text-[11px] uppercase tracking-wider mr-1">Fast Tools:</span>
+        <Link
+          href="/app/tools/"
+          className="px-3 py-1.5 bg-surface hover:bg-paper text-midnight rounded-lg border border-slate/20 font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
+        >
+          <span>🧮</span> Advisory Calculators
+        </Link>
+        <Link
+          href="/app/bankers/"
+          className="px-3 py-1.5 bg-surface hover:bg-paper text-midnight rounded-lg border border-slate/20 font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
+        >
+          <span>🏛️</span> Bankers Directory
+        </Link>
+        <Link
+          href="/app/contacts/"
+          className="px-3 py-1.5 bg-surface hover:bg-paper text-midnight rounded-lg border border-slate/20 font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
+        >
+          <span>📞</span> Contact Timeline
+        </Link>
+        <Link
+          href="/app/leads/"
+          className="px-3 py-1.5 bg-surface hover:bg-paper text-midnight rounded-lg border border-slate/20 font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
+        >
+          <span>📋</span> All Leads
+        </Link>
+        <Link
+          href="/app/pipeline/"
+          className="px-3 py-1.5 bg-surface hover:bg-paper text-midnight rounded-lg border border-slate/20 font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
+        >
+          <span>🗂️</span> Pipeline Board
+        </Link>
       </div>
 
       {/* Success Notification */}
