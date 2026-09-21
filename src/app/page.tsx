@@ -18,16 +18,24 @@ export default function HomePage() {
               Fintara<span className="font-normal text-slate ml-1">Capital</span>
             </span>
           </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm text-slate">
-            <Link href="/about/" className="hover:text-teal transition-colors">About</Link>
-            <Link href="/contact/" className="hover:text-teal transition-colors">Contact</Link>
+          <div className="flex items-center gap-3">
             <Link
               href="/auth/login/"
-              className="bg-midnight text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-midnight/90 transition-colors"
+              className="md:hidden bg-midnight text-white px-3 py-1.5 rounded-md text-xs font-medium hover:bg-midnight/90 transition-colors"
             >
               Sign in
             </Link>
-          </nav>
+            <nav className="hidden md:flex items-center gap-6 text-sm text-slate">
+              <Link href="/about/" className="hover:text-teal transition-colors">About</Link>
+              <Link href="/contact/" className="hover:text-teal transition-colors">Contact</Link>
+              <Link
+                href="/auth/login/"
+                className="bg-midnight text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-midnight/90 transition-colors"
+              >
+                Sign in
+              </Link>
+            </nav>
+          </div>
         </div>
       </header>
 
@@ -207,6 +215,7 @@ export default function HomePage() {
                 <Link href="/terms/" className="block hover:text-gold">Terms</Link>
                 <Link href="/disclosures/" className="block hover:text-gold">Disclosures</Link>
                 <Link href="/grievance/" className="block hover:text-gold">Grievance</Link>
+                <Link href="/auth/login/" className="block hover:text-gold text-gold font-medium">Staff Portal &rarr;</Link>
               </div>
             </div>
           </div>

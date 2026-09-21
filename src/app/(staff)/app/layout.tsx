@@ -64,14 +64,6 @@ function AppShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-import { DataProvider } from "@/lib/data/store";
-
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <AuthProvider>
-      <DataProvider>
-        <AppShell>{children}</AppShell>
-      </DataProvider>
-    </AuthProvider>
-  );
+  return <AppShell>{children}</AppShell>;
 }

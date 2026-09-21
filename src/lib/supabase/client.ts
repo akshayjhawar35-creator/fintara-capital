@@ -16,17 +16,19 @@ export function getSupabase(): SupabaseClient {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    // During static build or when env vars are missing,
-    // create a dummy client that will fail gracefully
-    if (typeof window === "undefined") {
-      // Server/build time — return a placeholder that won't be used
-      return createClient("http://localhost:54321", "placeholder-key", {
-        auth: { persistSession: false },
-      });
-    }
-    throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables"
+    // When env vars are missing (static export, preview, demo mode),
+    // provide a graceful fallback client that never throws in browser
+    _supabase = createClient(
+      "https://placeholder-fintara.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy",
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+        },
+      }
     );
+    return _supabase;
   }
 
   _supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -40,7 +42,7 @@ export function getSupabase(): SupabaseClient {
   return _supabase;
 }
 
-// For convenience — but always use getSupabase() in components
+// For convenience — always safe to access in components
 export const supabase = typeof window !== "undefined"
   ? getSupabase()
   : (null as unknown as SupabaseClient);

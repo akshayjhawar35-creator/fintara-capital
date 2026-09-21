@@ -44,39 +44,71 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchProfile = useCallback(async (userId: string) => {
-    const { data, error } = await getSupabase()
-      .from("profiles")
-      .select("id, full_name, email, mobile, role, team_label, is_active")
-      .eq("id", userId)
-      .single();
+    try {
+      const { data, error } = await getSupabase()
+        .from("profiles")
+        .select("id, full_name, email, mobile, role, team_label, is_active")
+        .eq("id", userId)
+        .single();
 
-    if (error || !data) {
-      console.error("Failed to fetch profile:", error);
+      if (error || !data) {
+        return null;
+      }
+      return data as Profile;
+    } catch {
       return null;
     }
-    return data as Profile;
   }, []);
 
   useEffect(() => {
-    // Get initial session
-    getSupabase().auth.getSession().then(async ({ data: { session: s } }) => {
-      if (s?.user) {
-        setSession(s);
-        setUser(s.user);
-        const p = await fetchProfile(s.user.id);
-        setProfile(p);
-      } else if (typeof window !== "undefined") {
+    const hasSupabase =
+      Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
+      Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
+    // If no real Supabase is configured, use local demo storage
+    if (!hasSupabase) {
+      if (typeof window !== "undefined") {
         const savedDemo = localStorage.getItem("fintara_demo_user");
         if (savedDemo) {
           try {
             const parsed = JSON.parse(savedDemo);
             setUser(parsed.user);
             setProfile(parsed.profile);
-          } catch (e) { /* ignore */ }
+          } catch {
+            // ignore JSON parse errors
+          }
         }
       }
       setIsLoading(false);
-    });
+      return;
+    }
+
+    // Get initial session with real Supabase
+    getSupabase()
+      .auth.getSession()
+      .then(async ({ data: { session: s } }) => {
+        if (s?.user) {
+          setSession(s);
+          setUser(s.user);
+          const p = await fetchProfile(s.user.id);
+          setProfile(p);
+        } else if (typeof window !== "undefined") {
+          const savedDemo = localStorage.getItem("fintara_demo_user");
+          if (savedDemo) {
+            try {
+              const parsed = JSON.parse(savedDemo);
+              setUser(parsed.user);
+              setProfile(parsed.profile);
+            } catch {
+              // ignore
+            }
+          }
+        }
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
 
     // Listen for auth changes
     const {
@@ -96,26 +128,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, [fetchProfile]);
 
-  // Idle timeout — check session age periodically
-  useEffect(() => {
-    if (!session) return;
-
-    const checkIdle = () => {
-      // Session idle check would use last activity timestamp
-      // For now, rely on Supabase's built-in session expiry
-    };
-
-    const interval = setInterval(checkIdle, 60_000);
-    return () => clearInterval(interval);
-  }, [session]);
-
   const signIn = useCallback(
     async (email: string, password: string): Promise<{ error: string | null }> => {
-      // Demo dev accounts support (SPEC App6)
-      if (email === "owner@fintara.test" || email === "staff1@fintara.test" || email.endsWith("@fintara.test")) {
-        const isOwner = email.includes("owner");
+      const hasSupabase =
+        Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
+        Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
+      // Demo dev accounts (SPEC App6) or local demo mode
+      if (
+        !hasSupabase ||
+        email === "owner@fintara.test" ||
+        email === "staff1@fintara.test" ||
+        email.endsWith("@fintara.test")
+      ) {
+        const isStaff = email.includes("staff");
         const demoUser = {
-          id: isOwner ? "owner-uuid" : "staff-1-uuid",
+          id: isStaff ? "staff-1-uuid" : "owner-uuid",
           email,
           app_metadata: {},
           user_metadata: {},
@@ -124,17 +152,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } as unknown as User;
         const demoProfile: Profile = {
           id: demoUser.id,
-          full_name: isOwner ? "Owner (Admin)" : "Staff 1",
+          full_name: isStaff ? "Staff 1" : "Owner (Admin)",
           email,
-          mobile: isOwner ? "9800000001" : "9800000002",
-          role: isOwner ? "admin" : "staff",
-          team_label: isOwner ? "Owner" : "Staff 1",
+          mobile: isStaff ? "9800000002" : "9800000001",
+          role: isStaff ? "staff" : "admin",
+          team_label: isStaff ? "Staff 1" : "Owner",
           is_active: true,
         };
         setUser(demoUser);
         setProfile(demoProfile);
         if (typeof window !== "undefined") {
-          localStorage.setItem("fintara_demo_user", JSON.stringify({ user: demoUser, profile: demoProfile }));
+          localStorage.setItem(
+            "fintara_demo_user",
+            JSON.stringify({ user: demoUser, profile: demoProfile })
+          );
         }
         return { error: null };
       }
@@ -149,25 +180,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return { error: error.message };
         }
         return { error: null };
-      } catch (err: any) {
-        return { error: err?.message || "Authentication service unavailable." };
+      } catch (err: unknown) {
+        return {
+          error: err instanceof Error ? err.message : "Authentication service unavailable.",
+        };
       }
     },
     []
   );
 
   const signOut = useCallback(async () => {
-    await getSupabase().auth.signOut();
+    try {
+      await getSupabase().auth.signOut();
+    } catch {
+      // ignore
+    }
     setUser(null);
     setProfile(null);
     setSession(null);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("fintara_demo_user");
+    }
   }, []);
 
   const signOutAllDevices = useCallback(async () => {
-    await getSupabase().auth.signOut({ scope: "global" });
+    try {
+      await getSupabase().auth.signOut({ scope: "global" });
+    } catch {
+      // ignore
+    }
     setUser(null);
     setProfile(null);
     setSession(null);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("fintara_demo_user");
+    }
   }, []);
 
   const value: AuthContextType = {

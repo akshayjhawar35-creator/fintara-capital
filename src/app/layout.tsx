@@ -36,6 +36,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { AppProviders } from "@/components/providers/AppProviders";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -46,7 +48,9 @@ export default function RootLayout({
       lang="en"
       className={`${ibmPlexSans.variable} ${newsreader.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <AppProviders>{children}</AppProviders>
+      </body>
     </html>
   );
 }
