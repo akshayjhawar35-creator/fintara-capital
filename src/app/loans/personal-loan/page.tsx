@@ -65,14 +65,14 @@ export default function PersonalLoanPage() {
           </Link>
           <nav className="flex items-center gap-6 text-xs sm:text-sm font-medium text-slate">
             <Link href="/" className="hover:text-emerald transition-colors">Home</Link>
-            <Link href="/loans/secured-loans/" className="hover:text-emerald transition-colors">Secured</Link>
-            <Link href="/loans/unsecured-loans/" className="hover:text-emerald transition-colors">Unsecured</Link>
+            <Link href="/loans/secured-loans/" className="hover:text-emerald transition-colors">Secured Loans</Link>
+            <Link href="/loans/unsecured-loans/" className="hover:text-emerald transition-colors">Unsecured Loans</Link>
             <Link href="/calculators/emi/" className="hover:text-emerald transition-colors">EMI Calculator</Link>
             <Link
               href="/auth/login/"
               className="bg-midnight text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-midnight/90 transition-colors"
             >
-              Staff Portal
+              Login
             </Link>
           </nav>
         </div>

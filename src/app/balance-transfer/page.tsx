@@ -38,10 +38,11 @@ export default function BalanceTransferPage() {
           </Link>
           <nav className="flex items-center gap-6 text-sm text-slate">
             <Link href="/" className="hover:text-teal">Home</Link>
+            <Link href="/loans/secured-loans/" className="hover:text-teal">Secured Loans</Link>
+            <Link href="/loans/unsecured-loans/" className="hover:text-teal">Unsecured Loans</Link>
             <Link href="/calculators/emi/" className="hover:text-teal">EMI Calculator</Link>
-            <Link href="/apply/" className="hover:text-teal">Apply</Link>
             <Link href="/auth/login/" className="bg-midnight text-white px-3.5 py-1.5 rounded-md font-medium">
-              Sign in
+              Login
             </Link>
           </nav>
         </div>

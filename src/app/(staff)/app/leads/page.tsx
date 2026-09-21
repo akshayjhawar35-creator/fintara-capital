@@ -19,8 +19,10 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Lead } from "@/lib/data/mock-data";
+import { useAuth } from "@/lib/hooks/use-auth";
 
 export default function LeadsPage() {
+  const { isAdmin } = useAuth();
   const {
     leads,
     products,
@@ -31,6 +33,7 @@ export default function LeadsPage() {
     checkDuplicateMobile,
     getFollowupAlert,
     addClient,
+    reassignLead,
   } = useData();
 
   const [viewMode, setViewMode] = useState<"table" | "kanban">("table");
@@ -38,6 +41,7 @@ export default function LeadsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [productFilter, setProductFilter] = useState<string>("all");
   const [alertFilter, setAlertFilter] = useState<string>("all");
+  const [officerFilter, setOfficerFilter] = useState<string>("all");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [convertingLead, setConvertingLead] = useState<Lead | null>(null);
 
@@ -167,9 +171,11 @@ export default function LeadsPage() {
         if (alert !== alertFilter) return false;
       }
 
+      if (officerFilter !== "all" && lead.assigned_to !== officerFilter) return false;
+
       return true;
     });
-  }, [leads, searchQuery, statusFilter, productFilter, alertFilter, getFollowupAlert]);
+  }, [leads, searchQuery, statusFilter, productFilter, alertFilter, officerFilter, getFollowupAlert]);
 
   // SLA Alert Pill Renderer
   const renderAlertPill = (nextFollowupOn: string | null) => {
@@ -272,7 +278,7 @@ export default function LeadsPage() {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-surface p-4 rounded-xl border border-slate/15 shadow-xs grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="bg-surface p-4 rounded-xl border border-slate/15 shadow-xs grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         {/* Search */}
         <div className="relative">
           <Search className="w-4 h-4 absolute left-3 top-3 text-slate/50" />
@@ -327,6 +333,17 @@ export default function LeadsPage() {
           <option value="DUE SOON">🟡 Due Soon (&le; 7d)</option>
           <option value="OK">🟢 OK</option>
           <option value="NO FOLLOW-UP SET">⚠️ No Follow-up Set</option>
+        </select>
+
+        {/* Assigned Officer Filter (Rule R1: Firm-wide Oversight) */}
+        <select
+          value={officerFilter}
+          onChange={(e) => setOfficerFilter(e.target.value)}
+          className="w-full px-3 py-2 text-sm border border-slate/20 rounded-md bg-paper/50 text-midnight focus:outline-none focus:ring-2 focus:ring-teal font-medium"
+        >
+          <option value="all">All Officers (Firm-wide)</option>
+          <option value="Owner">Assigned: Owner</option>
+          <option value="Staff 1">Assigned: Staff 1</option>
         </select>
       </div>
 
@@ -423,7 +440,19 @@ export default function LeadsPage() {
 
                       {/* Assigned Owner */}
                       <td className="py-3.5 px-4 text-xs font-medium text-slate">
-                        {lead.assigned_to}
+                        {isAdmin ? (
+                          <select
+                            value={lead.assigned_to}
+                            onChange={(e) => reassignLead(lead.id, e.target.value)}
+                            className="text-xs font-semibold px-2 py-1 rounded-md border border-slate/20 bg-paper text-midnight hover:border-teal cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal shadow-2xs"
+                            title="Reassign lead (Owner supervision)"
+                          >
+                            <option value="Owner">Owner</option>
+                            <option value="Staff 1">Staff 1</option>
+                          </select>
+                        ) : (
+                          <span>{lead.assigned_to}</span>
+                        )}
                       </td>
 
                       {/* Quick Actions */}
@@ -502,7 +531,19 @@ export default function LeadsPage() {
                       >
                         <div className="flex items-center justify-between text-xs">
                           <span className="font-mono font-bold text-teal">{l.lead_code}</span>
-                          <span className="text-slate font-medium">{l.assigned_to}</span>
+                          {isAdmin ? (
+                            <select
+                              value={l.assigned_to}
+                              onChange={(e) => reassignLead(l.id, e.target.value)}
+                              className="text-[10px] font-semibold px-1.5 py-0.5 rounded border border-slate/20 bg-paper text-midnight hover:border-teal cursor-pointer shadow-2xs"
+                              title="Reassign lead"
+                            >
+                              <option value="Owner">Owner</option>
+                              <option value="Staff 1">Staff 1</option>
+                            </select>
+                          ) : (
+                            <span className="text-slate font-medium">{l.assigned_to}</span>
+                          )}
                         </div>
 
                         <div>

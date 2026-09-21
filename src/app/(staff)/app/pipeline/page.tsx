@@ -19,10 +19,22 @@ import {
   Sparkles,
 } from "lucide-react";
 import { CaseItem, StageName } from "@/lib/data/mock-data";
+import { useAuth } from "@/lib/hooks/use-auth";
 
 export default function PipelinePage() {
-  const { cases, stages, products, lenders, bankers, clients, today, addCase, getCaseAlerts } =
-    useData();
+  const { isAdmin } = useAuth();
+  const {
+    cases,
+    stages,
+    products,
+    lenders,
+    bankers,
+    clients,
+    today,
+    addCase,
+    getCaseAlerts,
+    reassignCase,
+  } = useData();
 
   const [viewMode, setViewMode] = useState<"kanban" | "table">("kanban");
   const [searchQuery, setSearchQuery] = useState("");
@@ -337,9 +349,25 @@ export default function PipelinePage() {
                             <span className="font-mono font-bold text-teal group-hover:underline">
                               {c.case_code}
                             </span>
-                            <span className="text-[11px] font-medium text-slate">
-                              {c.handled_by}
-                            </span>
+                            {isAdmin ? (
+                              <select
+                                value={c.handled_by}
+                                onChange={(e) => {
+                                  e.preventDefault();
+                                  reassignCase(c.id, e.target.value);
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-[10px] font-semibold px-1.5 py-0.5 rounded border border-slate/20 bg-paper text-midnight hover:border-teal cursor-pointer shadow-2xs"
+                                title="Reassign case (Owner supervision)"
+                              >
+                                <option value="Owner">Owner</option>
+                                <option value="Staff 1">Staff 1</option>
+                              </select>
+                            ) : (
+                              <span className="text-[11px] font-medium text-slate">
+                                {c.handled_by}
+                              </span>
+                            )}
                           </div>
 
                           <div>
@@ -385,6 +413,7 @@ export default function PipelinePage() {
                   <th className="py-3 px-4">Stage</th>
                   <th className="py-3 px-4">Health &amp; Alerts</th>
                   <th className="py-3 px-4">Follow-up</th>
+                  <th className="py-3 px-4">Officer</th>
                   <th className="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
@@ -422,6 +451,21 @@ export default function PipelinePage() {
                       <td className="py-3.5 px-4">{renderCaseBadges(c)}</td>
                       <td className="py-3.5 px-4 text-xs text-slate whitespace-nowrap">
                         {c.next_followup_on ? formatDate(c.next_followup_on) : "None"}
+                      </td>
+                      <td className="py-3.5 px-4 text-xs font-medium text-slate">
+                        {isAdmin ? (
+                          <select
+                            value={c.handled_by}
+                            onChange={(e) => reassignCase(c.id, e.target.value)}
+                            className="text-xs font-semibold px-2 py-1 rounded-md border border-slate/20 bg-paper text-midnight hover:border-teal cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal shadow-2xs"
+                            title="Reassign case (Owner supervision)"
+                          >
+                            <option value="Owner">Owner</option>
+                            <option value="Staff 1">Staff 1</option>
+                          </select>
+                        ) : (
+                          <span>{c.handled_by}</span>
+                        )}
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         <Link

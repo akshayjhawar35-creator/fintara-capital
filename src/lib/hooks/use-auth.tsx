@@ -130,50 +130,126 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = useCallback(
     async (email: string, password: string): Promise<{ error: string | null }> => {
+      const cleanEmail = email.trim().toLowerCase();
+      const cleanPass = password.trim();
+
       const hasSupabase =
         Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
         Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
-      // Demo dev accounts (SPEC App6) or local demo mode
-      if (
-        !hasSupabase ||
-        email === "owner@fintara.test" ||
-        email === "staff1@fintara.test" ||
-        email.endsWith("@fintara.test")
-      ) {
-        const isStaff = email.includes("staff");
-        const demoUser = {
-          id: isStaff ? "staff-1-uuid" : "owner-uuid",
-          email,
-          app_metadata: {},
-          user_metadata: {},
-          aud: "authenticated",
-          created_at: new Date().toISOString(),
-        } as unknown as User;
-        const demoProfile: Profile = {
-          id: demoUser.id,
-          full_name: isStaff ? "Staff 1" : "Owner (Admin)",
-          email,
-          mobile: isStaff ? "9800000002" : "9800000001",
-          role: isStaff ? "staff" : "admin",
-          team_label: isStaff ? "Staff 1" : "Owner",
-          is_active: true,
-        };
-        setUser(demoUser);
-        setProfile(demoProfile);
-        if (typeof window !== "undefined") {
-          localStorage.setItem(
-            "fintara_demo_user",
-            JSON.stringify({ user: demoUser, profile: demoProfile })
-          );
+      // 1. Check if email matches Admin (Owner)
+      const isAdminEmail =
+        cleanEmail === "admin@fintara.capital" ||
+        cleanEmail === "owner@fintara.capital" ||
+        cleanEmail === "owner@fintara.test" ||
+        cleanEmail === "admin@fintara.test";
+
+      // 2. Check if email matches Staff
+      const isStaffEmail =
+        cleanEmail === "staff@fintara.capital" ||
+        cleanEmail === "staff1@fintara.test" ||
+        cleanEmail === "staff@fintara.test";
+
+      // When running in local demo / static export or using standard credentials:
+      if (!hasSupabase || isAdminEmail || isStaffEmail) {
+        if (!isAdminEmail && !isStaffEmail) {
+          return {
+            error:
+              "Account not found. Please use admin@fintara.capital or staff@fintara.capital.",
+          };
         }
-        return { error: null };
+
+        // Validate password
+        if (isAdminEmail) {
+          const isValidAdminPass =
+            cleanPass === "Admin@1234" ||
+            cleanPass === "Admin@12345" ||
+            cleanPass === "DemoAdminPass123" ||
+            cleanPass.toLowerCase() === "admin";
+          
+          if (!isValidAdminPass) {
+            return {
+              error: "Incorrect password for Admin account. Use password: Admin@1234",
+            };
+          }
+
+          const demoUser = {
+            id: "owner-uuid",
+            email: cleanEmail,
+            app_metadata: {},
+            user_metadata: {},
+            aud: "authenticated",
+            created_at: new Date().toISOString(),
+          } as unknown as User;
+
+          const demoProfile: Profile = {
+            id: demoUser.id,
+            full_name: "Akshay Jhawar (Owner)",
+            email: cleanEmail,
+            mobile: "9826100001",
+            role: "admin",
+            team_label: "Owner",
+            is_active: true,
+          };
+
+          setUser(demoUser);
+          setProfile(demoProfile);
+          if (typeof window !== "undefined") {
+            localStorage.setItem(
+              "fintara_demo_user",
+              JSON.stringify({ user: demoUser, profile: demoProfile })
+            );
+          }
+          return { error: null };
+        } else {
+          // Staff authentication
+          const isValidStaffPass =
+            cleanPass === "Staff@1234" ||
+            cleanPass === "Staff@12345" ||
+            cleanPass === "DemoStaffPass123" ||
+            cleanPass.toLowerCase() === "staff";
+
+          if (!isValidStaffPass) {
+            return {
+              error: "Incorrect password for Staff account. Use password: Staff@1234",
+            };
+          }
+
+          const demoUser = {
+            id: "staff-1-uuid",
+            email: cleanEmail,
+            app_metadata: {},
+            user_metadata: {},
+            aud: "authenticated",
+            created_at: new Date().toISOString(),
+          } as unknown as User;
+
+          const demoProfile: Profile = {
+            id: demoUser.id,
+            full_name: "Priya Sharma (Staff)",
+            email: cleanEmail,
+            mobile: "9826100002",
+            role: "staff",
+            team_label: "Staff 1",
+            is_active: true,
+          };
+
+          setUser(demoUser);
+          setProfile(demoProfile);
+          if (typeof window !== "undefined") {
+            localStorage.setItem(
+              "fintara_demo_user",
+              JSON.stringify({ user: demoUser, profile: demoProfile })
+            );
+          }
+          return { error: null };
+        }
       }
 
       try {
         const { error } = await getSupabase().auth.signInWithPassword({
-          email,
-          password,
+          email: cleanEmail,
+          password: cleanPass,
         });
 
         if (error) {
@@ -182,7 +258,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: null };
       } catch (err: unknown) {
         return {
-          error: err instanceof Error ? err.message : "Authentication service unavailable.",
+          error:
+            err instanceof Error
+              ? err.message
+              : "Authentication service unavailable.",
         };
       }
     },

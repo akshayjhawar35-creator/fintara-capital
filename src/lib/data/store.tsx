@@ -108,6 +108,17 @@ export interface DataContextType {
   updateLoanReview: (loanId: string, reviewDate?: string) => void;
   updatePayout: (payoutId: string, updates: Partial<PayoutItem>) => void;
   createBTCaseFromLoan: (loanId: string) => CaseItem;
+  // Reassignment & Quick Edit Actions (Owner / Supervision)
+  reassignLead: (leadId: string, newAssignee: string) => void;
+  reassignCase: (caseId: string, newAssignee: string) => void;
+  reassignClient: (clientId: string, newAssignee: string) => void;
+  reassignLoan: (loanId: string, newAssignee: string) => void;
+  updateLead: (leadId: string, updates: Partial<Lead>) => void;
+  updateCase: (caseId: string, updates: Partial<CaseItem>) => void;
+  updateClient: (clientId: string, updates: Partial<Client>) => void;
+  // Settings & Configuration
+  settings: DeskSettings;
+  updateSettings: (updates: Partial<DeskSettings>) => void;
   // Admin & Migration Actions (Phase 7)
   purgeDemoData: () => { purgedLeads: number; purgedClients: number; purgedCases: number; purgedLoans: number; purgedPayouts: number };
   restoreDemoData: () => void;
@@ -117,15 +128,80 @@ export interface DataContextType {
   }) => { importedLeads: number; importedClients: number; errors: string[] };
 }
 
+export interface DeskSettings {
+  today: string;
+  leadSlaHours: number;
+  reminderWindowDays: number;
+  stuckDaysThreshold: number;
+  disbursalWindowDays: number;
+  payoutAgeingSlaDays: number;
+  // CIBIL & Underwriting Cutoffs
+  cibilHomeLoan: number;
+  cibilLap: number;
+  cibilBusinessLoan: number;
+  cibilPersonalLoan: number;
+  maxFoirPercent: number;
+  // Refinancing & BT Matrix
+  takeoverMinVintageMonths: number;
+  takeoverMinRoiDiffBps: number;
+  topupMinVintageMonths: number;
+  // Lender Commission Defaults (%)
+  commHomeLoan: number;
+  commLap: number;
+  commBusinessLoan: number;
+  commPersonalLoan: number;
+  // DPDP & Privacy
+  consentValidityDays: number;
+  sensitiveGuardEnabled: boolean;
+  auditLoggingEnabled: boolean;
+}
+
+export const DEFAULT_SETTINGS: DeskSettings = {
+  today: "2026-09-20",
+  leadSlaHours: 24,
+  reminderWindowDays: 7,
+  stuckDaysThreshold: 10,
+  disbursalWindowDays: 5,
+  payoutAgeingSlaDays: 45,
+  cibilHomeLoan: 700,
+  cibilLap: 680,
+  cibilBusinessLoan: 700,
+  cibilPersonalLoan: 720,
+  maxFoirPercent: 65,
+  takeoverMinVintageMonths: 6,
+  takeoverMinRoiDiffBps: 50,
+  topupMinVintageMonths: 12,
+  commHomeLoan: 0.50,
+  commLap: 0.85,
+  commBusinessLoan: 1.75,
+  commPersonalLoan: 1.50,
+  consentValidityDays: 365,
+  sensitiveGuardEnabled: true,
+  auditLoggingEnabled: true,
+};
+
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 const STORAGE_KEY = "fintara_crm_data_v1";
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
-  // Test date default 2026-09-20 per spec App6 / App7
-  const [today] = useState("2026-09-20");
-  const reminderWindowDays = 7;
-  const stuckDaysThreshold = 10; // Rule R3
+  const [settings, setSettings] = useState<DeskSettings>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_settings`);
+      if (saved) {
+        try {
+          return { ...DEFAULT_SETTINGS, ...JSON.parse(saved) };
+        } catch {
+          // fallback
+        }
+      }
+    }
+    return DEFAULT_SETTINGS;
+  });
+
+  const today = settings.today;
+  const reminderWindowDays = settings.reminderWindowDays;
+  const stuckDaysThreshold = settings.stuckDaysThreshold;
 
   const [leads, setLeads] = useState<Lead[]>(() => {
     if (typeof window !== "undefined") {
@@ -636,6 +712,68 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     return { importedLeads, importedClients, errors };
   };
 
+  const updateSettings = (updates: Partial<DeskSettings>) => {
+    setSettings((prev) => {
+      const next = { ...prev, ...updates };
+      if (typeof window !== "undefined") {
+        localStorage.setItem(`${STORAGE_KEY}_settings`, JSON.stringify(next));
+      }
+      return next;
+    });
+  };
+
+  const reassignLead = (leadId: string, newAssignee: string) => {
+    setLeads((prev) =>
+      prev.map((l) =>
+        l.id === leadId
+          ? {
+              ...l,
+              assigned_to: newAssignee,
+              assigned_to_id: newAssignee === "Owner" ? "usr-owner" : "usr-staff1",
+            }
+          : l
+      )
+    );
+  };
+
+  const reassignCase = (caseId: string, newAssignee: string) => {
+    setCases((prev) =>
+      prev.map((c) => (c.id === caseId ? { ...c, handled_by: newAssignee } : c))
+    );
+  };
+
+  const reassignClient = (clientId: string, newAssignee: string) => {
+    setClients((prev) =>
+      prev.map((c) =>
+        c.id === clientId ? { ...c, relationship_owner: newAssignee } : c
+      )
+    );
+  };
+
+  const reassignLoan = (loanId: string, newAssignee: string) => {
+    setLoans((prev) =>
+      prev.map((ln) => (ln.id === loanId ? { ...ln, handled_by: newAssignee } : ln))
+    );
+  };
+
+  const updateLead = (leadId: string, updates: Partial<Lead>) => {
+    setLeads((prev) =>
+      prev.map((l) => (l.id === leadId ? { ...l, ...updates } : l))
+    );
+  };
+
+  const updateCase = (caseId: string, updates: Partial<CaseItem>) => {
+    setCases((prev) =>
+      prev.map((c) => (c.id === caseId ? { ...c, ...updates } : c))
+    );
+  };
+
+  const updateClient = (clientId: string, updates: Partial<Client>) => {
+    setClients((prev) =>
+      prev.map((c) => (c.id === clientId ? { ...c, ...updates } : c))
+    );
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -652,6 +790,15 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         stages: STAGE_DEFINITIONS,
         today,
         reminderWindowDays,
+        settings,
+        updateSettings,
+        reassignLead,
+        reassignCase,
+        reassignClient,
+        reassignLoan,
+        updateLead,
+        updateCase,
+        updateClient,
         addLead,
         updateLeadStatus,
         updateLeadFollowup,

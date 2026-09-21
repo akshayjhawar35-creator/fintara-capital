@@ -22,12 +22,22 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { StageName, CaseItem } from "@/lib/data/mock-data";
+import { useAuth } from "@/lib/hooks/use-auth";
 
 function CaseDetailContent() {
+  const { isAdmin } = useAuth();
   const searchParams = useSearchParams();
   const caseCode = searchParams.get("id") || "CS-0002";
-  const { cases, stages, today, updateCaseStage, updateCaseFollowup, getCaseAlerts, addContactLog } =
-    useData();
+  const {
+    cases,
+    stages,
+    today,
+    updateCaseStage,
+    updateCaseFollowup,
+    getCaseAlerts,
+    addContactLog,
+    reassignCase,
+  } = useData();
 
   const [activeTab, setActiveTab] = useState<"documents" | "submissions" | "history" | "notes">("documents");
   const [isStageModalOpen, setIsStageModalOpen] = useState(false);
@@ -163,10 +173,33 @@ function CaseDetailContent() {
               </span>
             </div>
 
-            <p className="text-xs text-slate">
-              {currentCase.product_name} • Primary Lender:{" "}
-              <strong className="text-midnight">{currentCase.primary_submission.lender_name}</strong>{" "}
-              ({currentCase.primary_submission.banker_name}) • Handled by: {currentCase.handled_by}
+            <p className="text-xs text-slate flex items-center gap-1.5 flex-wrap">
+              <span>{currentCase.product_name}</span>
+              <span>•</span>
+              <span>
+                Primary Lender:{" "}
+                <strong className="text-midnight">
+                  {currentCase.primary_submission.lender_name}
+                </strong>{" "}
+                ({currentCase.primary_submission.banker_name})
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1">
+                Handled by:
+                {isAdmin ? (
+                  <select
+                    value={currentCase.handled_by}
+                    onChange={(e) => reassignCase(currentCase.id, e.target.value)}
+                    className="text-xs font-semibold px-2 py-0.5 rounded border border-slate/20 bg-paper text-midnight hover:border-teal cursor-pointer"
+                    title="Reassign case (Owner supervision)"
+                  >
+                    <option value="Owner">Owner</option>
+                    <option value="Staff 1">Staff 1</option>
+                  </select>
+                ) : (
+                  <strong className="text-midnight">{currentCase.handled_by}</strong>
+                )}
+              </span>
             </p>
           </div>
 

@@ -98,7 +98,7 @@ export default function ArticlesPage() {
               href="/auth/login/"
               className="bg-midnight text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-midnight/90 transition-colors"
             >
-              Staff Portal
+              Login
             </Link>
           </nav>
         </div>

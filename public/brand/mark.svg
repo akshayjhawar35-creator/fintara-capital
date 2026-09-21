@@ -1,41 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0A1128"/>
-      <stop offset="100%" stop-color="#162044"/>
+    <!-- Obsidian Navy Shield Gradient -->
+    <linearGradient id="obsidianGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080E21"/>
+      <stop offset="60%" stop-color="#0F1A3A"/>
+      <stop offset="100%" stop-color="#16234B"/>
     </linearGradient>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FDE047"/>
-      <stop offset="50%" stop-color="#D4AF37"/>
-      <stop offset="100%" stop-color="#CA8A04"/>
+
+    <!-- Sovereign Champagne Gold Gradient -->
+    <linearGradient id="finGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF3C4"/>
+      <stop offset="35%" stop-color="#F2CA52"/>
+      <stop offset="70%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#B8860B"/>
     </linearGradient>
-    <linearGradient id="tealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2DD4BF"/>
+
+    <!-- High-Impact Trust Emerald Gradient -->
+    <linearGradient id="finEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="50%" stop-color="#10B981"/>
       <stop offset="100%" stop-color="#0D9488"/>
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+
+    <!-- Soft Ambient Glow -->
+    <filter id="starGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
       <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
   </defs>
 
-  <!-- Luxury Obsidian Rounded Shield -->
-  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgGrad)"/>
-  <rect x="2.5" y="2.5" width="59" height="59" rx="13.5" stroke="rgba(212, 175, 55, 0.25)" stroke-width="1"/>
+  <!-- Base Rounded Executive Shield -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#obsidianGrad)"/>
+  <rect x="2.5" y="2.5" width="59" height="59" rx="15.5" stroke="url(#finGold)" stroke-width="1.2" stroke-opacity="0.35"/>
 
-  <!-- Geometric Ascending Monogram "F" with Apex Star -->
-  <!-- Vertical Pillar -->
-  <path d="M16 15 C16 13.89 16.89 13 18 13 L21 13 C22.11 13 23 13.89 23 15 L23 49 C23 50.11 22.11 51 21 51 L18 51 C16.89 51 16 50.11 16 49 Z" fill="#FFFFFF"/>
+  <!-- Subtle Inner Geometry Ring -->
+  <rect x="5.5" y="5.5" width="53" height="53" rx="12.5" stroke="#FFFFFF" stroke-width="0.75" stroke-opacity="0.08"/>
 
-  <!-- Upper Tier Bar -->
-  <path d="M22 17 C22 15.89 22.89 15 24 15 L43 15 C44.11 15 45 15.89 45 17 L45 22 C45 23.11 44.11 24 43 24 L24 24 C22.89 24 22 23.11 22 22 Z" fill="#FFFFFF"/>
+  <!-- Monogram F — Vertical Anchor Pillar -->
+  <path d="M16 16 C16 14.895 16.895 14 18 14 L22 14 C23.105 14 24 14.895 24 16 L24 48 C24 49.105 23.105 50 22 50 L18 50 C16.895 50 16 49.105 16 48 Z" fill="#FFFFFF"/>
 
-  <!-- Middle Growth Chevron Bar in Emerald -->
-  <path d="M22 30 C22 28.89 22.89 28 24 28 L36 28 C37.11 28 38 28.89 38 30 L38 35 C38 36.11 37.11 37 36 37 L24 37 C22.89 37 22 36.11 22 35 Z" fill="url(#tealGrad)"/>
+  <!-- Monogram F — Upper Horizon Arch -->
+  <path d="M22 17 C22 15.343 23.343 14 25 14 L42 14 C43.657 14 45 15.343 45 17 L45 22 C45 23.657 43.657 25 42 25 L25 25 C23.343 25 22 23.657 22 22 Z" fill="#FFFFFF"/>
 
-  <!-- Apex 4-Point Golden Star (Tara) -->
-  <g transform="translate(48, 19.5)" filter="url(#glow)">
-    <path d="M0 -7 L1.6 -1.8 L7 0 L1.6 1.8 L0 7 L-1.6 1.8 L-7 0 L-1.6 -1.8 Z" fill="url(#goldGrad)"/>
-    <circle cx="0" cy="0" r="1.2" fill="#FFFFFF"/>
+  <!-- Monogram F — Middle Accelerating Emerald Tier -->
+  <path d="M22 29.5 C22 28.12 23.12 27 24.5 27 L36.5 27 C37.88 27 39 28.12 39 29.5 L39 34.5 C39 35.88 37.88 37 36.5 37 L24.5 37 C23.12 37 22 35.88 22 34.5 Z" fill="url(#finEmerald)"/>
+
+  <!-- Tara (Guiding Star) Apex in Champagne Gold -->
+  <g transform="translate(48, 18)" filter="url(#starGlow)">
+    <!-- 8-Pointed Star -->
+    <path d="M0 -8 L1.8 -2.2 L8 0 L1.8 2.2 L0 8 L-1.8 2.2 L-8 0 L-1.8 -2.2 Z" fill="url(#finGold)"/>
+    <circle cx="0" cy="0" r="1.5" fill="#FFFFFF"/>
   </g>
 </svg>

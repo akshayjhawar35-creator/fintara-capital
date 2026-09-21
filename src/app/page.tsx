@@ -240,7 +240,7 @@ export default function HomePage() {
               Secured Loans
             </Link>
             <Link href="/loans/unsecured-loans/" className="hover:text-emerald transition-colors">
-              Unsecured
+              Unsecured Loans
             </Link>
             <Link href="/loans/personal-loan/" className="hover:text-emerald transition-colors">
               Personal Loans
@@ -269,7 +269,7 @@ export default function HomePage() {
               href="/auth/login/"
               className="border border-slate/20 text-midnight hover:bg-midnight hover:text-white px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors"
             >
-              Staff Portal
+              Login
             </Link>
           </div>
         </div>
@@ -725,7 +725,7 @@ export default function HomePage() {
                 <li><Link href="/articles/" className="hover:text-emerald transition-colors">Financial Articles</Link></li>
                 <li><Link href="/privacy/" className="hover:text-emerald transition-colors">Privacy Policy (DPDP)</Link></li>
                 <li><Link href="/terms/" className="hover:text-emerald transition-colors">Terms of Service</Link></li>
-                <li><Link href="/auth/login/" className="text-gold hover:underline font-semibold">Staff Portal &rarr;</Link></li>
+                <li><Link href="/auth/login/" className="text-gold hover:underline font-semibold">Portal Login &rarr;</Link></li>
               </ul>
             </div>
           </div>

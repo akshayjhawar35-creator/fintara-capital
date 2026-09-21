@@ -17,9 +17,11 @@ import {
   Briefcase,
 } from "lucide-react";
 import { Client } from "@/lib/data/mock-data";
+import { useAuth } from "@/lib/hooks/use-auth";
 
 export default function ClientsPage() {
-  const { clients, today, addClient, checkDuplicateMobile } = useData();
+  const { isAdmin } = useAuth();
+  const { clients, today, addClient, checkDuplicateMobile, reassignClient } = useData();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
@@ -278,7 +280,19 @@ export default function ClientsPage() {
 
                     {/* Relationship Owner */}
                     <td className="py-3.5 px-4 text-xs font-medium text-slate">
-                      {client.relationship_owner}
+                      {isAdmin ? (
+                        <select
+                          value={client.relationship_owner}
+                          onChange={(e) => reassignClient(client.id, e.target.value)}
+                          className="text-xs font-semibold px-2 py-1 rounded-md border border-slate/20 bg-paper text-midnight hover:border-teal cursor-pointer shadow-2xs"
+                          title="Reassign relationship owner"
+                        >
+                          <option value="Owner">Owner</option>
+                          <option value="Staff 1">Staff 1</option>
+                        </select>
+                      ) : (
+                        <span>{client.relationship_owner}</span>
+                      )}
                     </td>
 
                     {/* Actions */}

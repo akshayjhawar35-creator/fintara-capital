@@ -17,6 +17,12 @@ import {
   Database,
   FileText,
   XCircle,
+  Save,
+  RotateCcw,
+  Sparkles,
+  Percent,
+  Lock,
+  Building2,
 } from "lucide-react";
 import { detectSensitiveData, SENSITIVE_DATA_MESSAGE } from "@/lib/sensitive-guard";
 import { formatINR } from "@/lib/format";
@@ -37,8 +43,8 @@ interface ParsedRow {
 
 export default function AdminSettingsPage() {
   const {
-    today,
-    reminderWindowDays,
+    settings,
+    updateSettings,
     products,
     leads,
     clients,
@@ -51,7 +57,9 @@ export default function AdminSettingsPage() {
     checkDuplicateMobile,
   } = useData();
 
-  const [testDate, setTestDate] = useState(today);
+  // Local copy of settings for editing
+  const [formSettings, setFormSettings] = useState(settings);
+  const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
 
   // Demo Data state
   const [showPurgeModal, setShowPurgeModal] = useState(false);
@@ -72,6 +80,67 @@ export default function AdminSettingsPage() {
   const demoPayoutsCount = payouts.filter((p) => p.is_demo).length;
   const totalDemoRecords =
     demoLeadsCount + demoClientsCount + demoCasesCount + demoLoansCount + demoPayoutsCount;
+
+  // Save Settings
+  const handleSaveSettings = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateSettings(formSettings);
+    setSaveSuccessMsg("System settings updated & active across all desk sessions!");
+    setTimeout(() => setSaveSuccessMsg(null), 4000);
+  };
+
+  // Reset to Defaults
+  const handleResetSettings = () => {
+    updateSettings({
+      today: "2026-09-20",
+      leadSlaHours: 24,
+      reminderWindowDays: 7,
+      stuckDaysThreshold: 10,
+      disbursalWindowDays: 5,
+      payoutAgeingSlaDays: 45,
+      cibilHomeLoan: 700,
+      cibilLap: 680,
+      cibilBusinessLoan: 700,
+      cibilPersonalLoan: 720,
+      maxFoirPercent: 65,
+      takeoverMinVintageMonths: 6,
+      takeoverMinRoiDiffBps: 50,
+      topupMinVintageMonths: 12,
+      commHomeLoan: 0.50,
+      commLap: 0.85,
+      commBusinessLoan: 1.75,
+      commPersonalLoan: 1.50,
+      consentValidityDays: 365,
+      sensitiveGuardEnabled: true,
+      auditLoggingEnabled: true,
+    });
+    setFormSettings((prev) => ({
+      ...prev,
+      today: "2026-09-20",
+      leadSlaHours: 24,
+      reminderWindowDays: 7,
+      stuckDaysThreshold: 10,
+      disbursalWindowDays: 5,
+      payoutAgeingSlaDays: 45,
+      cibilHomeLoan: 700,
+      cibilLap: 680,
+      cibilBusinessLoan: 700,
+      cibilPersonalLoan: 720,
+      maxFoirPercent: 65,
+      takeoverMinVintageMonths: 6,
+      takeoverMinRoiDiffBps: 50,
+      topupMinVintageMonths: 12,
+      commHomeLoan: 0.50,
+      commLap: 0.85,
+      commBusinessLoan: 1.75,
+      commPersonalLoan: 1.50,
+      consentValidityDays: 365,
+      sensitiveGuardEnabled: true,
+      auditLoggingEnabled: true,
+    }));
+    setSaveSuccessMsg("Settings restored to factory defaults.");
+    setTimeout(() => setSaveSuccessMsg(null), 4000);
+  };
 
   // Handle Purge
   const handleConfirmPurge = () => {
@@ -126,7 +195,6 @@ export default function AdminSettingsPage() {
 
     const rows: ParsedRow[] = [];
 
-    // Skip header line 0
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim();
       if (!line) continue;
@@ -142,18 +210,15 @@ export default function AdminSettingsPage() {
       const area = parts[3] || "";
       const notes = parts.slice(6).join(", ") || parts[5] || "";
 
-      // 1. Mandatory validation
       if (!name) errors.push("Name is required");
       if (!mobile || mobile.length !== 10) errors.push("Mobile must be a 10-digit Indian number");
 
-      // 2. Sensitive data check on free-text notes
       const sensitiveInNotes = detectSensitiveData(line);
       if (sensitiveInNotes) {
         sensitiveViolation = `${sensitiveInNotes} pattern detected. ${SENSITIVE_DATA_MESSAGE}`;
         errors.push(sensitiveViolation);
       }
 
-      // 3. Duplicate check
       if (mobile && mobile.length === 10) {
         const dup = checkDuplicateMobile(mobile);
         if (dup.isDuplicate) {
@@ -198,10 +263,10 @@ export default function AdminSettingsPage() {
         source: "Excel / CSV Import",
         status: "New" as const,
         assigned_to: "Owner",
-        assigned_to_id: "usr-owner-001",
+        assigned_to_id: "usr-owner",
         last_contact_on: null,
-        next_followup_on: today,
-        notes: r.notes || "Imported via Admin Wizard",
+        next_followup_on: formSettings.today,
+        notes: r.notes || "Imported via bulk CSV wizard.",
       }));
 
       const res = importBatch({ leads: leadsPayload });
@@ -211,92 +276,672 @@ export default function AdminSettingsPage() {
         name: r.name,
         contact_person: r.name,
         mobile: r.mobile,
-        email: `${r.name.toLowerCase().replace(/[^a-z0-9]/g, "")}@example.com`,
+        email: `${r.name.toLowerCase().replace(/[^a-z0-9]/g, "")}@import.sample`,
         city_area: r.area || "Raipur",
         address: `${r.area || "Raipur"}, Chhattisgarh`,
-        client_type: "Business Owner" as const,
-        turnover: r.amountOrTurnover || 10000000,
-        client_since: today,
+        client_type: "Salaried" as const,
+        client_since: formSettings.today,
         relationship_owner: "Owner",
         source: "Excel / CSV Import",
-        consent_status: "Pending" as const,
-        notes: r.notes || "Imported via Admin Wizard",
+        consent_status: "Yes" as const,
+        consent_channel: "Physical Form" as const,
+        consent_date: formSettings.today,
+        notes: r.notes || "Imported via bulk CSV wizard.",
       }));
 
       const res = importBatch({ clients: clientsPayload });
       setImportResult({ imported: res.importedClients, errors: res.errors });
     }
 
-    // Reset wizard input
     setCsvContent("");
     setParsedRows([]);
     setIsSimulated(false);
   };
 
   return (
-    <div className="space-y-8 max-w-5xl">
-      <div>
-        <h1 className="text-2xl font-serif font-semibold text-midnight">System Settings &amp; Data Hub</h1>
-        <p className="text-sm text-slate">
-          Admin controls for alerts, Excel import validation, test dates, and data lifecycle management.
-        </p>
+    <div className="space-y-8 pb-16">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <Settings className="w-6 h-6 text-midnight" />
+            <h1 className="text-2xl font-serif font-semibold text-midnight">
+              System Settings &amp; Operations
+            </h1>
+          </div>
+          <p className="text-xs text-slate mt-1">
+            Configure SLA alert rules, credit cut-offs, lender commissions, DPDP privacy guards &amp; simulation controls.
+          </p>
+        </div>
+
+        {/* Global Save Action */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleResetSettings}
+            className="px-3 py-2 text-xs font-semibold rounded-xl border border-slate/20 hover:bg-slate/10 text-slate hover:text-midnight transition-colors flex items-center gap-1.5"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            Reset Defaults
+          </button>
+          <button
+            type="button"
+            onClick={handleSaveSettings}
+            className="px-4 py-2 text-xs font-bold rounded-xl bg-teal hover:bg-teal/90 text-white transition-all shadow-xs flex items-center gap-1.5"
+          >
+            <Save className="w-3.5 h-3.5 text-gold" />
+            Save All Settings
+          </button>
+        </div>
       </div>
 
-      {purgeStatusMessage && (
-        <div className="p-4 bg-teal/10 border border-teal/30 rounded-xl flex items-center justify-between text-teal-800 text-sm">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-teal" />
-            <span>{purgeStatusMessage}</span>
-          </div>
-          <button
-            onClick={() => setPurgeStatusMessage(null)}
-            className="text-xs font-semibold hover:underline text-teal"
-          >
-            Dismiss
-          </button>
+      {/* Success Notification Banner */}
+      {saveSuccessMsg && (
+        <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 font-semibold flex items-center gap-2 animate-fadeIn shadow-2xs">
+          <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+          <span>{saveSuccessMsg}</span>
         </div>
       )}
 
-      {/* Excel / CSV Import Wizard Section */}
+      {/* SECTION 1: Operational SLA & TAT Alert Controls */}
+      <div className="bg-surface rounded-2xl border border-slate/15 p-6 shadow-xs space-y-4">
+        <div className="flex items-center gap-2 border-b border-slate/15 pb-3">
+          <Clock className="w-4 h-4 text-teal" />
+          <h2 className="text-sm font-bold text-midnight uppercase tracking-wider">
+            1. Operational Turn-Around Time (TAT) &amp; Alert Windows
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-xs">
+          {/* Lead First Response SLA */}
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Lead 1st Response SLA
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="1"
+                max="72"
+                value={formSettings.leadSlaHours}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    leadSlaHours: Number(e.target.value) || 24,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">Hours</span>
+            </div>
+            <p className="text-[10px] text-slate">Maximum time before a new inquiry is flagged.</p>
+          </div>
+
+          {/* Follow-up Reminder Window */}
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Follow-up Reminder
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="1"
+                max="30"
+                value={formSettings.reminderWindowDays}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    reminderWindowDays: Number(e.target.value) || 7,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">Days</span>
+            </div>
+            <p className="text-[10px] text-slate">Days before next touchpoint becomes Due Soon.</p>
+          </div>
+
+          {/* Stuck Case Threshold */}
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Stuck Case Threshold
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="3"
+                max="45"
+                value={formSettings.stuckDaysThreshold}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    stuckDaysThreshold: Number(e.target.value) || 10,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">Days</span>
+            </div>
+            <p className="text-[10px] text-slate">Triggers STUCK alert on pipeline cases (Rule R3).</p>
+          </div>
+
+          {/* Expected Disbursal Horizon */}
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Disbursal Horizon
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="1"
+                max="30"
+                value={formSettings.disbursalWindowDays}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    disbursalWindowDays: Number(e.target.value) || 5,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">Days</span>
+            </div>
+            <p className="text-[10px] text-slate">Days to highlight Disbursal Pending cases.</p>
+          </div>
+
+          {/* Payout Aging SLA */}
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Payout Overdue SLA
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="15"
+                max="90"
+                value={formSettings.payoutAgeingSlaDays}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    payoutAgeingSlaDays: Number(e.target.value) || 45,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">Days</span>
+            </div>
+            <p className="text-[10px] text-slate">Flags lender commissions aged beyond threshold.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 2: Underwriting Rules & CIBIL Cut-offs */}
+      <div className="bg-surface rounded-2xl border border-slate/15 p-6 shadow-xs space-y-4">
+        <div className="flex items-center gap-2 border-b border-slate/15 pb-3">
+          <Shield className="w-4 h-4 text-emerald" />
+          <h2 className="text-sm font-bold text-midnight uppercase tracking-wider">
+            2. Underwriting Rules &amp; Minimum CIBIL Score Thresholds
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-xs">
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Home Loan CIBIL Min
+            </label>
+            <input
+              type="number"
+              min="500"
+              max="900"
+              value={formSettings.cibilHomeLoan}
+              onChange={(e) =>
+                setFormSettings({
+                  ...formSettings,
+                  cibilHomeLoan: Number(e.target.value) || 700,
+                })
+              }
+              className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+            />
+            <p className="text-[10px] text-slate">Standard cutoff across retail housing lenders.</p>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              LAP CIBIL Min
+            </label>
+            <input
+              type="number"
+              min="500"
+              max="900"
+              value={formSettings.cibilLap}
+              onChange={(e) =>
+                setFormSettings({
+                  ...formSettings,
+                  cibilLap: Number(e.target.value) || 680,
+                })
+              }
+              className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+            />
+            <p className="text-[10px] text-slate">Secured mortgage minimum threshold.</p>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Business Loan CIBIL Min
+            </label>
+            <input
+              type="number"
+              min="500"
+              max="900"
+              value={formSettings.cibilBusinessLoan}
+              onChange={(e) =>
+                setFormSettings({
+                  ...formSettings,
+                  cibilBusinessLoan: Number(e.target.value) || 700,
+                })
+              }
+              className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+            />
+            <p className="text-[10px] text-slate">Unsecured SME banking qualification limit.</p>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Personal Loan CIBIL Min
+            </label>
+            <input
+              type="number"
+              min="500"
+              max="900"
+              value={formSettings.cibilPersonalLoan}
+              onChange={(e) =>
+                setFormSettings({
+                  ...formSettings,
+                  cibilPersonalLoan: Number(e.target.value) || 720,
+                })
+              }
+              className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+            />
+            <p className="text-[10px] text-slate">Salaried digital instant processing cut-off.</p>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Max FOIR / Debt Ceiling
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="30"
+                max="85"
+                value={formSettings.maxFoirPercent}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    maxFoirPercent: Number(e.target.value) || 65,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">%</span>
+            </div>
+            <p className="text-[10px] text-slate">Maximum allowed fixed obligations vs income.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 3: Refinancing & Balance Transfer (Takeover) Matrix */}
+      <div className="bg-surface rounded-2xl border border-slate/15 p-6 shadow-xs space-y-4">
+        <div className="flex items-center gap-2 border-b border-slate/15 pb-3">
+          <Sliders className="w-4 h-4 text-gold" />
+          <h2 className="text-sm font-bold text-midnight uppercase tracking-wider">
+            3. Refinancing &amp; Balance Transfer Takeover Matrix
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Min Vintage for Takeover
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="3"
+                max="24"
+                value={formSettings.takeoverMinVintageMonths}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    takeoverMinVintageMonths: Number(e.target.value) || 6,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">Months</span>
+            </div>
+            <p className="text-[10px] text-slate">Rule R8: Minimum active repayment months before BT.</p>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Takeover Trigger Rate Gap
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="10"
+                max="200"
+                value={formSettings.takeoverMinRoiDiffBps}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    takeoverMinRoiDiffBps: Number(e.target.value) || 50,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">bps (0.50%)</span>
+            </div>
+            <p className="text-[10px] text-slate">Minimum interest rate differential triggering Radar alert.</p>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Top-Up Window Vintage
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="6"
+                max="36"
+                value={formSettings.topupMinVintageMonths}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    topupMinVintageMonths: Number(e.target.value) || 12,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">Months</span>
+            </div>
+            <p className="text-[10px] text-slate">Rule R9: Months required before top-up window unlocks.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 4: Partner Lender Default Commissions Grid */}
+      <div className="bg-surface rounded-2xl border border-slate/15 p-6 shadow-xs space-y-4">
+        <div className="flex items-center gap-2 border-b border-slate/15 pb-3">
+          <Percent className="w-4 h-4 text-emerald" />
+          <h2 className="text-sm font-bold text-midnight uppercase tracking-wider">
+            4. Institutional Commission Defaults (% of Disbursal Amount)
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Home Loans Commission
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                step="0.05"
+                min="0.1"
+                max="2.0"
+                value={formSettings.commHomeLoan}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    commHomeLoan: parseFloat(e.target.value) || 0.50,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">%</span>
+            </div>
+            <p className="text-[10px] text-slate">Standard bank payout rate on residential housing.</p>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              LAP Commission
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                step="0.05"
+                min="0.2"
+                max="3.0"
+                value={formSettings.commLap}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    commLap: parseFloat(e.target.value) || 0.85,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">%</span>
+            </div>
+            <p className="text-[10px] text-slate">Mortgage loan against property commission.</p>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Business Loan Commission
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                step="0.1"
+                min="0.5"
+                max="5.0"
+                value={formSettings.commBusinessLoan}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    commBusinessLoan: parseFloat(e.target.value) || 1.75,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">%</span>
+            </div>
+            <p className="text-[10px] text-slate">Unsecured SME working capital commission.</p>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Personal Loan Commission
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                step="0.1"
+                min="0.5"
+                max="4.0"
+                value={formSettings.commPersonalLoan}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    commPersonalLoan: parseFloat(e.target.value) || 1.50,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">%</span>
+            </div>
+            <p className="text-[10px] text-slate">Salaried consumer unsecured loan commission.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 5: DPDP 2023 Compliance & Data Protection Shield */}
+      <div className="bg-surface rounded-2xl border border-slate/15 p-6 shadow-xs space-y-4">
+        <div className="flex items-center gap-2 border-b border-slate/15 pb-3">
+          <Lock className="w-4 h-4 text-midnight" />
+          <h2 className="text-sm font-bold text-midnight uppercase tracking-wider">
+            5. Digital Personal Data Protection (DPDP Act 2023) Controls
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
+          <div className="space-y-1.5">
+            <label className="block font-semibold text-midnight">
+              Affirmative Consent Validity
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="30"
+                max="730"
+                value={formSettings.consentValidityDays}
+                onChange={(e) =>
+                  setFormSettings({
+                    ...formSettings,
+                    consentValidityDays: Number(e.target.value) || 365,
+                  })
+                }
+                className="w-full px-3 py-2 bg-paper/50 border border-slate/20 rounded-xl font-mono text-xs font-bold text-midnight focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal/30"
+              />
+              <span className="absolute right-3 top-2 text-slate text-[11px]">Days</span>
+            </div>
+            <p className="text-[10px] text-slate">Annual re-affirmation required after expiration.</p>
+          </div>
+
+          <div className="flex items-center justify-between p-3.5 bg-paper rounded-xl border border-slate/15">
+            <div>
+              <span className="font-semibold text-midnight block">Sensitive Data Regex Shield</span>
+              <span className="text-[10px] text-slate">
+                Blocks storing raw PAN / Aadhaar in notes &amp; free text.
+              </span>
+            </div>
+            <input
+              type="checkbox"
+              checked={formSettings.sensitiveGuardEnabled}
+              onChange={(e) =>
+                setFormSettings({
+                  ...formSettings,
+                  sensitiveGuardEnabled: e.target.checked,
+                })
+              }
+              className="h-4 w-4 rounded text-teal focus:ring-teal cursor-pointer"
+            />
+          </div>
+
+          <div className="flex items-center justify-between p-3.5 bg-paper rounded-xl border border-slate/15">
+            <div>
+              <span className="font-semibold text-midnight block">Immutable Audit Trail</span>
+              <span className="text-[10px] text-slate">
+                Logs all stage progressions, reassignments &amp; logins.
+              </span>
+            </div>
+            <input
+              type="checkbox"
+              checked={formSettings.auditLoggingEnabled}
+              onChange={(e) =>
+                setFormSettings({
+                  ...formSettings,
+                  auditLoggingEnabled: e.target.checked,
+                })
+              }
+              className="h-4 w-4 rounded text-teal focus:ring-teal cursor-pointer"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 6: System Test-Date Override (Rule R23) */}
+      <div className="bg-surface rounded-2xl border border-slate/15 p-6 shadow-xs space-y-4">
+        <div className="flex items-center gap-2 border-b border-slate/15 pb-3">
+          <Clock className="w-4 h-4 text-teal" />
+          <h2 className="text-sm font-bold text-midnight uppercase tracking-wider">
+            6. System Simulation Date (Rule R23)
+          </h2>
+        </div>
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+          <div>
+            <p className="text-slate leading-relaxed">
+              Allows management to simulate any date for portfolio aging verification, SLA testing, and audit validation without altering database records.
+            </p>
+            <p className="text-[11px] text-slate font-medium mt-1">
+              Active Date: <strong className="text-midnight font-mono">{formSettings.today}</strong>
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <input
+              type="date"
+              value={formSettings.today}
+              onChange={(e) =>
+                setFormSettings({
+                  ...formSettings,
+                  today: e.target.value,
+                })
+              }
+              className="px-3 py-2 border border-slate/20 rounded-xl text-xs font-mono bg-paper/50 focus:bg-white text-midnight font-bold"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const now = new Date().toISOString().split("T")[0];
+                setFormSettings({ ...formSettings, today: now });
+              }}
+              className="px-3 py-2 bg-paper border border-slate/20 rounded-xl text-xs font-semibold hover:bg-slate/10 text-midnight"
+            >
+              Set Current Real Date
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 7: Excel / CSV Bulk Data Importer */}
       <div className="bg-surface rounded-2xl border border-slate/15 p-6 shadow-xs space-y-6">
-        <div className="flex items-start justify-between border-b border-slate/15 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate/15 pb-4">
           <div>
             <div className="flex items-center gap-2">
               <FileSpreadsheet className="w-5 h-5 text-teal" />
-              <h2 className="text-base font-semibold text-midnight">Excel / CSV Bulk Import Wizard</h2>
+              <h2 className="text-base font-semibold text-midnight">
+                7. Excel &amp; CSV Bulk Data Importer
+              </h2>
             </div>
             <p className="text-xs text-slate mt-1">
-              Import leads or clients in bulk with real-time sensitive data defense (blocking raw PAN / Aadhaar numbers) and mobile duplicate inspection.
+              Bulk import borrower files from Excel with pre-validation dry-run and automatic DPDP sensitive data scrubbing.
             </p>
           </div>
-          <div className="flex gap-2">
+
+          <div className="flex items-center gap-2">
             <button
               onClick={() => handleDownloadTemplate("lead")}
-              className="px-3 py-1.5 bg-paper hover:bg-slate/10 text-midnight text-xs font-medium rounded-lg border border-slate/20 flex items-center gap-1.5 transition-colors"
+              className="px-3 py-1.5 bg-paper hover:bg-slate/10 text-midnight text-xs font-semibold rounded-lg border border-slate/20 flex items-center gap-1.5 transition-colors"
             >
-              <Download className="w-3.5 h-3.5 text-slate" />
-              Lead Template
+              <Download className="w-3.5 h-3.5 text-teal" />
+              Leads Template
             </button>
             <button
               onClick={() => handleDownloadTemplate("client")}
-              className="px-3 py-1.5 bg-paper hover:bg-slate/10 text-midnight text-xs font-medium rounded-lg border border-slate/20 flex items-center gap-1.5 transition-colors"
+              className="px-3 py-1.5 bg-paper hover:bg-slate/10 text-midnight text-xs font-semibold rounded-lg border border-slate/20 flex items-center gap-1.5 transition-colors"
             >
-              <Download className="w-3.5 h-3.5 text-slate" />
-              Client Template
+              <Download className="w-3.5 h-3.5 text-teal" />
+              Clients Template
             </button>
           </div>
         </div>
 
         {importResult && (
-          <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs space-y-1">
-            <div className="flex items-center gap-2 text-emerald-800 font-semibold text-sm">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              Successfully committed {importResult.imported} records to CRM database!
+          <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 space-y-1">
+            <div className="flex items-center gap-2 font-bold">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Import successful! Added {importResult.imported} records.</span>
             </div>
             {importResult.errors.length > 0 && (
-              <ul className="list-disc list-inside text-rose-700 mt-2 space-y-0.5">
-                {importResult.errors.map((e, idx) => (
-                  <li key={idx}>{e}</li>
+              <ul className="list-disc pl-5 text-amber-900 space-y-0.5 pt-1">
+                {importResult.errors.map((err, idx) => (
+                  <li key={idx}>{err}</li>
                 ))}
               </ul>
             )}
@@ -459,13 +1104,15 @@ export default function AdminSettingsPage() {
         )}
       </div>
 
-      {/* Demo Data Management & Hardening Section */}
+      {/* SECTION 8: Demo Data Management & Hardening */}
       <div className="bg-surface rounded-2xl border border-slate/15 p-6 shadow-xs space-y-4">
         <div className="flex items-center justify-between border-b border-slate/15 pb-4">
           <div>
             <div className="flex items-center gap-2">
               <Database className="w-5 h-5 text-rose-600" />
-              <h2 className="text-base font-semibold text-midnight">Demo Data Lifecycle &amp; Purge</h2>
+              <h2 className="text-base font-semibold text-midnight">
+                8. Demo Data Lifecycle &amp; Purge
+              </h2>
             </div>
             <p className="text-xs text-slate mt-1">
               Safely purge mock/seed test records (`is_demo = true`) when transitioning this installation to live client operations.
@@ -489,6 +1136,12 @@ export default function AdminSettingsPage() {
             </button>
           </div>
         </div>
+
+        {purgeStatusMessage && (
+          <div className="p-3 bg-paper border border-slate/20 rounded-xl text-xs text-midnight font-medium">
+            {purgeStatusMessage}
+          </div>
+        )}
 
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
           <div className="p-3 bg-paper rounded-xl border border-slate/10">
@@ -549,84 +1202,6 @@ export default function AdminSettingsPage() {
           </div>
         </div>
       )}
-
-      {/* Core System Configuration */}
-      <div className="bg-surface rounded-2xl border border-slate/15 p-6 shadow-xs space-y-6">
-        {/* Test Date Override */}
-        <div className="border-b border-slate/15 pb-6 space-y-3">
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-teal" />
-            <h2 className="text-sm font-semibold text-midnight">System Test-Date Override (Rule R23)</h2>
-          </div>
-          <p className="text-xs text-slate">
-            Used to simulate any date for acceptance testing and historical audit reconciliation.
-          </p>
-          <div className="flex items-center gap-3">
-            <input
-              type="date"
-              value={testDate}
-              onChange={(e) => setTestDate(e.target.value)}
-              className="px-3 py-1.5 border border-slate/20 rounded-md text-xs font-mono"
-            />
-            <span className="text-xs text-slate font-medium">
-              Current simulation date: <strong className="text-midnight">{testDate}</strong>
-            </span>
-          </div>
-        </div>
-
-        {/* SLA & Alert Windows */}
-        <div className="border-b border-slate/15 pb-6 space-y-3">
-          <div className="flex items-center gap-2">
-            <Sliders className="w-4 h-4 text-gold" />
-            <h2 className="text-sm font-semibold text-midnight">Alert Thresholds (from Workbook)</h2>
-          </div>
-          <div className="grid grid-cols-2 gap-4 text-xs">
-            <div className="p-3 bg-paper rounded-lg border border-slate/10">
-              <span className="text-slate block mb-1 font-medium">Reminder Window</span>
-              <span className="font-semibold text-midnight text-sm">{reminderWindowDays} days</span>
-            </div>
-            <div className="p-3 bg-paper rounded-lg border border-slate/10">
-              <span className="text-slate block mb-1 font-medium">Stuck Case Threshold</span>
-              <span className="font-semibold text-midnight text-sm">10 days</span>
-            </div>
-            <div className="p-3 bg-paper rounded-lg border border-slate/10">
-              <span className="text-slate block mb-1 font-medium">Takeover Minimum Age</span>
-              <span className="font-semibold text-midnight text-sm">6 months</span>
-            </div>
-            <div className="p-3 bg-paper rounded-lg border border-slate/10">
-              <span className="text-slate block mb-1 font-medium">Takeover Gap Threshold</span>
-              <span className="font-semibold text-midnight text-sm">0.50 pp (0.005)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Products & Market ROI Benchmarks */}
-        <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-midnight">Market ROI Benchmarks (Updated Monthly)</h2>
-          <div className="border border-slate/15 rounded-xl overflow-hidden text-xs">
-            <table className="w-full text-left">
-              <thead className="bg-paper text-slate uppercase text-[10px] tracking-wider border-b border-slate/15">
-                <tr>
-                  <th className="py-2.5 px-4">Product</th>
-                  <th className="py-2.5 px-4">Benchmark ROI</th>
-                  <th className="py-2.5 px-4">Secured</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate/10">
-                {products.map((p) => (
-                  <tr key={p.id} className="hover:bg-paper/40">
-                    <td className="py-2.5 px-4 font-semibold text-midnight">{p.name}</td>
-                    <td className="py-2.5 px-4 font-mono font-medium text-teal tabular-nums">
-                      {p.market_roi ? `${(p.market_roi * 100).toFixed(2)}%` : "None"}
-                    </td>
-                    <td className="py-2.5 px-4 text-slate">{p.is_secured ? "Yes" : "No"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

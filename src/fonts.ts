@@ -1,20 +1,20 @@
-import { IBM_Plex_Sans, Newsreader } from "next/font/google";
+import { Plus_Jakarta_Sans, Newsreader } from "next/font/google";
 
 /**
- * IBM Plex Sans — primary UI font.
- * Excellent tabular numerals for financial data.
- * Used everywhere in the staff app.
+ * Plus Jakarta Sans — primary UI & fintech display font.
+ * Recognized as the gold-standard font for modern financial tech
+ * (clean geometric curves, ultra-crisp tabular numbers, eye-catching readability).
  */
-export const ibmPlexSans = IBM_Plex_Sans({
+export const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-ibm-plex-sans",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-plus-jakarta-sans",
   display: "swap",
 });
 
 /**
- * Newsreader — serif font for public-site headlines.
- * Creates a clear, trustworthy contrast with the sans body.
+ * Newsreader — editorial serif font for public-site headlines.
+ * Creates an authoritative, institutional private-banking contrast.
  */
 export const newsreader = Newsreader({
   subsets: ["latin"],

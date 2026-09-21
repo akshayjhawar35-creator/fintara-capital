@@ -20,9 +20,13 @@ export function BottomNav() {
     <>
       {/* Floating Action Button — Log contact */}
       <div className="md:hidden fixed bottom-20 right-4 z-50">
-        <button className="flex items-center justify-center w-14 h-14 bg-teal text-white rounded-full shadow-lg hover:bg-teal/90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal">
+        <Link
+          href="/app/contacts/"
+          className="flex items-center justify-center w-14 h-14 bg-teal text-white rounded-full shadow-lg hover:bg-teal/90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal"
+          title="Log Client Interaction"
+        >
           <PenSquare className="h-6 w-6" />
-        </button>
+        </Link>
       </div>
 
       {/* Bottom Navigation */}
