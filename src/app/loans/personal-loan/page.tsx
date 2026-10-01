@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import { PublicHeader } from "@/components/public/PublicHeader";
+import { PublicFooter } from "@/components/public/PublicFooter";
 import {
   UserCheck,
   Zap,
@@ -51,32 +53,9 @@ export default function PersonalLoanPage() {
   };
 
   return (
-    <main className="min-h-dvh bg-paper text-midnight">
+    <div className="min-h-dvh bg-paper text-midnight flex flex-col justify-between">
       <JsonLd data={faqData} type="FAQPage" />
-
-      {/* Header */}
-      <header className="bg-white border-b border-slate/10 sticky top-0 z-30">
-        <div className="mx-auto max-w-6xl flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/brand/mark.svg" alt="Fintara Capital" width={38} height={38} />
-            <span className="font-semibold text-midnight text-lg tracking-tight">
-              Fintara<span className="font-normal text-slate ml-1">Capital</span>
-            </span>
-          </Link>
-          <nav className="flex items-center gap-6 text-xs sm:text-sm font-medium text-slate">
-            <Link href="/" className="hover:text-emerald transition-colors">Home</Link>
-            <Link href="/loans/secured-loans/" className="hover:text-emerald transition-colors">Secured Loans</Link>
-            <Link href="/loans/unsecured-loans/" className="hover:text-emerald transition-colors">Unsecured Loans</Link>
-            <Link href="/calculators/emi/" className="hover:text-emerald transition-colors">EMI Calculator</Link>
-            <Link
-              href="/auth/login/"
-              className="bg-midnight text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-midnight/90 transition-colors"
-            >
-              Login
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <PublicHeader />
 
       {/* Hero */}
       <section className="fintech-gradient-hero text-white py-16 md:py-24 px-4">
@@ -207,7 +186,7 @@ export default function PersonalLoanPage() {
         {/* CTA */}
         <div className="text-center pt-4">
           <Link
-            href="/apply/"
+            href="/contact/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-midnight text-white text-xs sm:text-sm font-semibold rounded-xl hover:bg-midnight/90 shadow-sm transition-all"
           >
             Check Your Personal Loan Eligibility
@@ -215,6 +194,8 @@ export default function PersonalLoanPage() {
           </Link>
         </div>
       </section>
-    </main>
+
+      <PublicFooter />
+    </div>
   );
 }

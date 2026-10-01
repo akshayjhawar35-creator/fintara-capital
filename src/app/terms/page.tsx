@@ -1,36 +1,30 @@
 import Link from "next/link";
-import Image from "next/image";
+import { PublicHeader } from "@/components/public/PublicHeader";
+import { PublicFooter } from "@/components/public/PublicFooter";
 
 export default function TermsPage() {
   return (
-    <main className="min-h-dvh bg-paper">
-      <header className="bg-white border-b border-slate/10">
-        <div className="mx-auto max-w-6xl flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/brand/mark.svg" alt="Fintara Capital" width={36} height={36} />
-            <span className="font-semibold text-midnight text-lg tracking-tight">
-              Fintara<span className="font-normal text-slate ml-1">Capital</span>
-            </span>
-          </Link>
-          <nav className="flex items-center gap-6 text-sm text-slate">
-            <Link href="/" className="hover:text-teal">Home</Link>
-            <Link href="/auth/login/" className="bg-midnight text-white px-3.5 py-1.5 rounded-md font-medium">Sign in</Link>
-          </nav>
-        </div>
-      </header>
+    <div className="min-h-dvh bg-paper text-midnight flex flex-col justify-between">
+      <PublicHeader />
 
-      <section className="py-16 px-4">
-        <div className="max-w-3xl mx-auto bg-surface p-8 rounded-2xl border border-slate/15 space-y-4 text-xs text-slate leading-relaxed">
-          <h1 className="font-serif text-2xl font-semibold text-midnight">Terms of Service</h1>
+      <section className="py-12 md:py-16 px-4 flex-1">
+        <div className="max-w-3xl mx-auto bg-surface p-8 rounded-2xl border border-slate/15 space-y-4 text-xs text-slate leading-relaxed shadow-xs">
+          <h1 className="font-serif text-2xl font-bold text-midnight">Terms of Service</h1>
           <p>
-            By using this website, you acknowledge that Fintara Capital acts solely as a loan facilitator and Direct Selling Agent (DSA) based in Raipur, Chhattisgarh.
+            By using this website, you acknowledge that Fintara Capital acts solely as an authorized loan facilitator and Direct Selling Agent (DSA) based in Raipur, Chhattisgarh, serving borrowers nationwide.
           </p>
           <h2 className="font-semibold text-midnight text-sm pt-2">No Guarantee of Sanction</h2>
           <p>
-            Loan sanctions, interest rates, processing charges, and disbursal timelines are determined solely by lending institutions (Banks, NBFCs, and HFCs) based on their internal credit policies.
+            Loan sanctions, interest rates, processing charges, and disbursal timelines are determined solely by institutional lending partners (Banks, NBFCs, and HFCs) based on their internal underwriting standards and credit policies.
+          </p>
+          <h2 className="font-semibold text-midnight text-sm pt-2">Zero Fee Advisory</h2>
+          <p>
+            Fintara Capital does not charge borrowers any upfront advisory or processing charges. Our services are compensated directly by empaneled lending institutions upon successful loan disbursals.
           </p>
         </div>
       </section>
-    </main>
+
+      <PublicFooter />
+    </div>
   );
 }

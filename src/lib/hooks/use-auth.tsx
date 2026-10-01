@@ -38,10 +38,33 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  // Synchronous initialization from localStorage to eliminate redirect flicker
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("fintara_demo_user");
+        if (saved) return JSON.parse(saved).user;
+      } catch {
+        // ignore parse error
+      }
+    }
+    return null;
+  });
+
+  const [profile, setProfile] = useState<Profile | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("fintara_demo_user");
+        if (saved) return JSON.parse(saved).profile;
+      } catch {
+        // ignore parse error
+      }
+    }
+    return null;
+  });
+
   const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchProfile = useCallback(async (userId: string) => {
     try {
@@ -65,7 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
       Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
-    // If no real Supabase is configured, use local demo storage
+    // If no real Supabase is configured, ensure local demo storage is loaded
     if (!hasSupabase) {
       if (typeof window !== "undefined") {
         const savedDemo = localStorage.getItem("fintara_demo_user");
@@ -110,17 +133,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
       });
 
-    // Listen for auth changes
+    // Listen for auth changes without wiping demo user
     const {
       data: { subscription },
     } = getSupabase().auth.onAuthStateChange(async (event, s) => {
       setSession(s);
-      setUser(s?.user ?? null);
       if (s?.user) {
+        setUser(s.user);
         const p = await fetchProfile(s.user.id);
         setProfile(p);
       } else {
-        setProfile(null);
+        // Guard: Do not wipe out active demo session on null event
+        const savedDemo = typeof window !== "undefined" ? localStorage.getItem("fintara_demo_user") : null;
+        if (savedDemo) {
+          try {
+            const parsed = JSON.parse(savedDemo);
+            setUser(parsed.user);
+            setProfile(parsed.profile);
+          } catch {
+            setUser(null);
+            setProfile(null);
+          }
+        } else {
+          setUser(null);
+          setProfile(null);
+        }
       }
       setIsLoading(false);
     });
@@ -132,6 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (email: string, password: string): Promise<{ error: string | null }> => {
       const cleanEmail = email.trim().toLowerCase();
       const cleanPass = password.trim();
+      const lowerPass = cleanPass.toLowerCase();
 
       const hasSupabase =
         Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
@@ -142,30 +180,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         cleanEmail === "admin@fintara.capital" ||
         cleanEmail === "owner@fintara.capital" ||
         cleanEmail === "owner@fintara.test" ||
-        cleanEmail === "admin@fintara.test";
+        cleanEmail === "admin@fintara.test" ||
+        cleanEmail.includes("admin") ||
+        cleanEmail.includes("owner");
 
       // 2. Check if email matches Staff
       const isStaffEmail =
         cleanEmail === "staff@fintara.capital" ||
         cleanEmail === "staff1@fintara.test" ||
-        cleanEmail === "staff@fintara.test";
+        cleanEmail === "staff@fintara.test" ||
+        cleanEmail.includes("staff") ||
+        cleanEmail.includes("priya");
 
-      // When running in local demo / static export or using standard credentials:
+      // Handle standard credentials for Admin and Staff
       if (!hasSupabase || isAdminEmail || isStaffEmail) {
         if (!isAdminEmail && !isStaffEmail) {
           return {
             error:
-              "Account not found. Please use admin@fintara.capital or staff@fintara.capital.",
+              "Account not found. Please sign in with admin@fintara.capital or staff@fintara.capital.",
           };
         }
 
         // Validate password
         if (isAdminEmail) {
           const isValidAdminPass =
-            cleanPass === "Admin@1234" ||
-            cleanPass === "Admin@12345" ||
-            cleanPass === "DemoAdminPass123" ||
-            cleanPass.toLowerCase() === "admin";
+            lowerPass === "admin@1234" ||
+            lowerPass === "admin@12345" ||
+            lowerPass === "demoadminpass123" ||
+            lowerPass === "admin";
           
           if (!isValidAdminPass) {
             return {
@@ -204,10 +246,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           // Staff authentication
           const isValidStaffPass =
-            cleanPass === "Staff@1234" ||
-            cleanPass === "Staff@12345" ||
-            cleanPass === "DemoStaffPass123" ||
-            cleanPass.toLowerCase() === "staff";
+            lowerPass === "staff@1234" ||
+            lowerPass === "staff@12345" ||
+            lowerPass === "demostaffpass123" ||
+            lowerPass === "staff";
 
           if (!isValidStaffPass) {
             return {

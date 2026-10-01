@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { PublicHeader } from "@/components/public/PublicHeader";
+import { PublicFooter } from "@/components/public/PublicFooter";
 import { calculateBTDetailed, calculateEMI } from "@/lib/finance";
 import { formatINR } from "@/lib/format";
 
@@ -26,27 +27,8 @@ export default function BalanceTransferPage() {
   const monthlySaving = Math.max(0, existingEmi - proposedEmi);
 
   return (
-    <main className="min-h-dvh bg-paper">
-      {/* Public Header */}
-      <header className="bg-white border-b border-slate/10 sticky top-0 z-30">
-        <div className="mx-auto max-w-6xl flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/brand/mark.svg" alt="Fintara Capital" width={36} height={36} />
-            <span className="font-semibold text-midnight text-lg tracking-tight">
-              Fintara<span className="font-normal text-slate ml-1">Capital</span>
-            </span>
-          </Link>
-          <nav className="flex items-center gap-6 text-sm text-slate">
-            <Link href="/" className="hover:text-teal">Home</Link>
-            <Link href="/loans/secured-loans/" className="hover:text-teal">Secured Loans</Link>
-            <Link href="/loans/unsecured-loans/" className="hover:text-teal">Unsecured Loans</Link>
-            <Link href="/calculators/emi/" className="hover:text-teal">EMI Calculator</Link>
-            <Link href="/auth/login/" className="bg-midnight text-white px-3.5 py-1.5 rounded-md font-medium">
-              Login
-            </Link>
-          </nav>
-        </div>
-      </header>
+    <div className="min-h-dvh bg-paper text-midnight flex flex-col justify-between">
+      <PublicHeader />
 
       {/* Hero & Intro */}
       <section className="py-12 px-4 max-w-5xl mx-auto space-y-8">
@@ -212,7 +194,7 @@ export default function BalanceTransferPage() {
 
             <div className="space-y-2">
               <Link
-                href="/apply/"
+                href="/contact/"
                 className="w-full py-3 bg-midnight text-white text-sm font-semibold rounded-lg hover:bg-midnight/90 text-center block shadow-xs transition-colors"
               >
                 Initiate Balance Transfer &rarr;
@@ -225,17 +207,7 @@ export default function BalanceTransferPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-slate/15 bg-white py-8 px-4 text-xs text-slate mt-12">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>&copy; {new Date().getFullYear()} Fintara Capital, Raipur (C.G.). All rights reserved.</p>
-          <div className="flex gap-4">
-            <Link href="/privacy/" className="hover:text-teal">Privacy Policy</Link>
-            <Link href="/terms/" className="hover:text-teal">Terms of Service</Link>
-            <Link href="/disclosures/" className="hover:text-teal">Regulatory Disclosures</Link>
-          </div>
-        </div>
-      </footer>
-    </main>
+      <PublicFooter />
+    </div>
   );
 }

@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { PublicHeader } from "@/components/public/PublicHeader";
+import { PublicFooter } from "@/components/public/PublicFooter";
 import { calculateEMI } from "@/lib/finance";
 import { formatINR } from "@/lib/format";
 
@@ -16,22 +17,8 @@ export default function EMICalculatorPage() {
   const totalInterest = totalPayment - amount;
 
   return (
-    <main className="min-h-dvh bg-paper">
-      <header className="bg-white border-b border-slate/10">
-        <div className="mx-auto max-w-6xl flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/brand/mark.svg" alt="Fintara Capital" width={36} height={36} />
-            <span className="font-semibold text-midnight text-lg tracking-tight">
-              Fintara<span className="font-normal text-slate ml-1">Capital</span>
-            </span>
-          </Link>
-          <nav className="flex items-center gap-6 text-sm text-slate">
-            <Link href="/" className="hover:text-teal">Home</Link>
-            <Link href="/apply/" className="hover:text-teal">Apply</Link>
-            <Link href="/auth/login/" className="bg-midnight text-white px-3.5 py-1.5 rounded-md font-medium">Sign in</Link>
-          </nav>
-        </div>
-      </header>
+    <div className="min-h-dvh bg-paper text-midnight flex flex-col justify-between">
+      <PublicHeader />
 
       <section className="py-16 px-4">
         <div className="max-w-3xl mx-auto space-y-8">
@@ -102,8 +89,8 @@ export default function EMICalculatorPage() {
               </div>
 
               <Link
-                href="/apply/"
-                className="w-full py-2 bg-midnight text-white text-xs font-semibold rounded-md hover:bg-midnight/90 block"
+                href="/contact/"
+                className="w-full py-2.5 bg-midnight text-white text-xs font-semibold rounded-xl hover:bg-midnight/90 block text-center shadow-xs"
               >
                 Apply for this Loan &rarr;
               </Link>
@@ -111,6 +98,8 @@ export default function EMICalculatorPage() {
           </div>
         </div>
       </section>
-    </main>
+
+      <PublicFooter />
+    </div>
   );
 }

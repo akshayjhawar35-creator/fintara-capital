@@ -61,11 +61,13 @@ export default function LoginPage() {
       const cleanEmail = data.email.trim().toLowerCase();
       const isAdminLogin =
         cleanEmail.includes("admin") || cleanEmail.includes("owner");
-      if (isAdminLogin) {
-        router.push("/app/admin/dashboard/");
-      } else {
-        router.push("/app/");
-      }
+      const targetUrl = isAdminLogin ? "/app/admin/dashboard/" : "/app/";
+      router.replace(targetUrl);
+      setTimeout(() => {
+        if (typeof window !== "undefined" && window.location.pathname.includes("/auth/login")) {
+          window.location.href = targetUrl;
+        }
+      }, 200);
     } catch {
       setAuthError("Something went wrong during sign-in. Please try again.");
     }
@@ -88,11 +90,13 @@ export default function LoginPage() {
         setIsQuickLoggingIn(null);
         return;
       }
-      if (targetRole === "admin") {
-        router.push("/app/admin/dashboard/");
-      } else {
-        router.push("/app/");
-      }
+      const targetUrl = targetRole === "admin" ? "/app/admin/dashboard/" : "/app/";
+      router.replace(targetUrl);
+      setTimeout(() => {
+        if (typeof window !== "undefined" && window.location.pathname.includes("/auth/login")) {
+          window.location.href = targetUrl;
+        }
+      }, 200);
     } catch {
       setAuthError("Quick sign-in encountered an issue. Try again.");
       setIsQuickLoggingIn(null);

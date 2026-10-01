@@ -1,40 +1,31 @@
 import Link from "next/link";
-import Image from "next/image";
+import { PublicHeader } from "@/components/public/PublicHeader";
+import { PublicFooter } from "@/components/public/PublicFooter";
 
 export default function GrievancePage() {
   return (
-    <main className="min-h-dvh bg-paper">
-      <header className="bg-white border-b border-slate/10">
-        <div className="mx-auto max-w-6xl flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/brand/mark.svg" alt="Fintara Capital" width={36} height={36} />
-            <span className="font-semibold text-midnight text-lg tracking-tight">
-              Fintara<span className="font-normal text-slate ml-1">Capital</span>
-            </span>
-          </Link>
-          <nav className="flex items-center gap-6 text-sm text-slate">
-            <Link href="/" className="hover:text-teal">Home</Link>
-            <Link href="/auth/login/" className="bg-midnight text-white px-3.5 py-1.5 rounded-md font-medium">Sign in</Link>
-          </nav>
-        </div>
-      </header>
+    <div className="min-h-dvh bg-paper text-midnight flex flex-col justify-between">
+      <PublicHeader />
 
-      <section className="py-16 px-4">
-        <div className="max-w-3xl mx-auto bg-surface p-8 rounded-2xl border border-slate/15 space-y-4 text-xs text-slate leading-relaxed">
-          <h1 className="font-serif text-2xl font-semibold text-midnight">Grievance Redressal Mechanism</h1>
+      <section className="py-12 md:py-16 px-4 flex-1">
+        <div className="max-w-3xl mx-auto bg-surface p-8 rounded-2xl border border-slate/15 space-y-4 text-xs text-slate leading-relaxed shadow-xs">
+          <h1 className="font-serif text-2xl font-bold text-midnight">Grievance Redressal Mechanism</h1>
           <p>
-            In compliance with Digital Lending guidelines, Fintara Capital maintains a formal customer grievance redressal process.
+            In compliance with RBI guidelines on Fair Practices and Digital Lending, Fintara Capital maintains a formal, transparent customer grievance redressal process for all loan facilitation services.
           </p>
 
-          <div className="p-4 bg-paper rounded-xl border border-slate/15 space-y-2">
-            <h2 className="font-semibold text-midnight text-sm">Grievance Redressal Officer</h2>
-            <p><strong>Name:</strong> Grievance Officer, Fintara Capital</p>
-            <p><strong>Address:</strong> Raipur, Chhattisgarh, India</p>
-            <p><strong>Email:</strong> grievance@fintara.capital</p>
-            <p><strong>Resolution TAT:</strong> 7 business days</p>
+          <div className="p-5 bg-paper rounded-2xl border border-slate/15 space-y-2.5">
+            <h2 className="font-bold text-midnight text-sm">Grievance Redressal Officer</h2>
+            <p><strong>Name:</strong> Senior Compliance Officer, Fintara Capital</p>
+            <p><strong>HQ Address:</strong> Civil Lines / Pandri, Raipur, Chhattisgarh &ndash; 492001, India</p>
+            <p><strong>Email:</strong> grievance@fintara.capital / contact@fintara.capital</p>
+            <p><strong>Direct Helpline:</strong> +91 98261 00000</p>
+            <p><strong>Resolution SLA / TAT:</strong> 7 business days from receipt of grievance</p>
           </div>
         </div>
       </section>
-    </main>
+
+      <PublicFooter />
+    </div>
   );
 }
