@@ -10,17 +10,17 @@ export function JsonLd({ type = "FinancialService", data }: JsonLdProps) {
     "@context": "https://schema.org",
     "@type": ["FinancialService", "LocalBusiness"],
     name: "Fintara Capital",
-    alternateName: "Fintara Loan Desk",
-    url: "https://fintara-capital.vercel.app",
-    logo: "https://fintara-capital.vercel.app/brand/mark.svg",
-    image: "https://fintara-capital.vercel.app/brand/logo-horizontal.svg",
+    alternateName: "Fintara Institutional Debt Advisory",
+    url: "https://fintara.capital",
+    logo: "https://fintara.capital/brand/mark.svg",
+    image: "https://fintara.capital/brand/logo-horizontal.svg",
     description:
-      "Pan-India loan facilitation desk and mortgage advisor partnering with 18+ leading banks and NBFCs. Doorstep processing and digital advisory for Home Loans, Loan Against Property (LAP), Business Loans, Personal Loans, and Balance Transfers.",
-    telephone: "+91-98000-00001",
-    email: "contact@fintara.capital",
+      "Pan-India institutional loan advisory desk and mortgage advisor partnering with 18+ leading national banks and NBFCs. Doorstep processing and digital advisory for Home Loans, Loan Against Property (LAP), Business Loans, Personal Loans, and Balance Transfers with zero borrower fees.",
+    telephone: "+91-95893-52662",
+    email: "fintaracapital@gmail.com",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Pandri / Civil Lines Financial District",
+      streetAddress: "Civil Lines & Pandri Commercial District",
       addressLocality: "Raipur",
       addressRegion: "Chhattisgarh",
       postalCode: "492001",
@@ -43,12 +43,13 @@ export function JsonLd({ type = "FinancialService", data }: JsonLdProps) {
       { "@type": "City", name: "Delhi" },
       { "@type": "City", name: "Bengaluru" },
       { "@type": "City", name: "Hyderabad" },
+      { "@type": "City", name: "Indore" },
     ],
     priceRange: "₹₹",
     openingHours: "Mo-Sa 09:30-19:00",
     hasOfferCatalog: {
       "@type": "OfferCatalog",
-      name: "Loan Facilitation Services",
+      name: "Institutional Debt Facilitation Services",
       itemListElement: [
         {
           "@type": "Offer",
@@ -63,30 +64,30 @@ export function JsonLd({ type = "FinancialService", data }: JsonLdProps) {
           itemOffered: {
             "@type": "FinancialProduct",
             name: "Loan Against Property (LAP)",
-            description: "Mortgage loans unlocking property equity with high tenure and optimal LTV.",
+            description: "Commercial & residential mortgage loans unlocking property equity with high tenure and optimal LTV.",
           },
         },
         {
           "@type": "Offer",
           itemOffered: {
             "@type": "FinancialProduct",
-            name: "Business Loans & Working Capital",
-            description: "Secured and unsecured business loans, CC/OD limits, machinery finance, and GST-based limits.",
+            name: "Unsecured Business Loans & MSME Credit",
+            description: "Collateral-free business loans, CC/OD limits, machinery finance, and GST-based limits.",
           },
         },
         {
           "@type": "Offer",
           itemOffered: {
             "@type": "FinancialProduct",
-            name: "Personal Loans",
-            description: "Fast-track unsecured personal financing for salaried professionals and business owners.",
+            name: "Personal Loans for Professionals",
+            description: "Fast-track unsecured personal financing for corporate salaried staff, doctors, and CAs.",
           },
         },
         {
           "@type": "Offer",
           itemOffered: {
             "@type": "FinancialProduct",
-            name: "Balance Transfer (Takeover)",
+            name: "Loan Balance Transfer (Takeover)",
             description: "Refinance high-cost existing loans to lower rates and secure substantial EMI savings.",
           },
         },
@@ -94,6 +95,10 @@ export function JsonLd({ type = "FinancialService", data }: JsonLdProps) {
     },
     sameAs: [
       "https://www.linkedin.com/company/fintara-capital",
+      "https://x.com/fintaracapital",
+      "https://instagram.com/fintara.capital",
+      "https://youtube.com/@fintaracapital",
+      "https://wa.me/919589352662",
       "https://github.com/akshayjhawar35-creator/fintara-capital",
     ],
   };

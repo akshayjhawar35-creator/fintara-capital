@@ -23,7 +23,7 @@ export default function PrivacyPage() {
           </p>
           <h2 className="font-semibold text-midnight text-sm pt-2">3. Right to Withdraw Consent</h2>
           <p>
-            You have the right to withdraw your consent at any time. To request consent withdrawal or data deletion, contact our Grievance Officer at contact@fintara.capital.
+            You have the right to withdraw your consent at any time. To request consent withdrawal or data deletion, contact our Grievance Officer at fintaracapital@gmail.com.
           </p>
         </div>
       </section>

@@ -10,12 +10,17 @@ import {
   ShieldCheck,
   ExternalLink,
   MessageCircle,
+  FileText,
+  Sparkles,
 } from "lucide-react";
 
 export function PublicFooter() {
   return (
-    <footer className="bg-midnight text-white/70 py-12 px-4 text-xs border-t border-white/10">
-      <div className="max-w-6xl mx-auto space-y-10">
+    <footer className="bg-midnight text-white/70 py-14 px-4 text-xs border-t border-white/10 relative overflow-hidden">
+      {/* Subtle Ambient Background Mesh */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-mint/5 rounded-full blur-3xl pointer-events-none -z-10" />
+
+      <div className="max-w-6xl mx-auto space-y-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand & Address Column */}
           <div className="col-span-2 space-y-4">
@@ -23,46 +28,50 @@ export function PublicFooter() {
               <Image
                 src="/brand/mark.svg"
                 alt="Fintara Capital"
-                width={38}
-                height={38}
-                className="h-9 w-9 rounded-xl shadow-xs"
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-xl shadow-xs"
               />
               <div>
-                <span className="font-serif text-lg font-bold text-white tracking-tight block">
-                  Fintara Capital
+                <span className="font-extrabold text-lg text-white tracking-tight block">
+                  Fintara <span className="font-normal text-slate-400">Capital</span>
                 </span>
-                <span className="text-[10px] uppercase tracking-widest text-emerald font-bold block">
-                  Loans Arranged Across Lenders
+                <span className="text-[10px] uppercase tracking-widest text-mint font-bold block">
+                  Institutional Debt &amp; Loan Desk
                 </span>
               </div>
             </Link>
 
             <p className="max-w-sm text-xs leading-relaxed text-white/60">
-              Institutional loan facilitation desk and mortgage advisor. We evaluate credit profiles and compare underwriting criteria across 18+ national banks and NBFCs for borrowers across India.
+              India&apos;s premier loan advisory platform connecting prime and mid-market borrowers to 18+ national banks and AAA-rated NBFCs. Delivering algorithmic rate arbitrage and rapid doorstep disbursals.
             </p>
 
-            {/* Raipur HQ & Pan-India Desk */}
-            <div className="text-[11px] text-white/70 space-y-1.5 pt-1 border-t border-white/10">
+            {/* Official Contact Coordinates */}
+            <div className="text-[11px] text-white/75 space-y-2 pt-2 border-t border-white/10">
               <div className="flex items-start gap-2">
-                <MapPin className="w-3.5 h-3.5 text-emerald shrink-0 mt-0.5" />
+                <MapPin className="w-3.5 h-3.5 text-mint shrink-0 mt-0.5" />
                 <span>
-                  <strong>National HQ:</strong> Civil Lines / Pandri, Raipur, Chhattisgarh &ndash; 492001
+                  <strong>National HQ:</strong> Civil Lines &amp; Pandri Commercial Hub, Raipur, Chhattisgarh &ndash; 492001 (Serving All India)
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-emerald shrink-0" />
-                <span>+91 98261 00000 &bull; +91 98261 00001</span>
+                <Phone className="w-3.5 h-3.5 text-mint shrink-0" />
+                <a href="tel:+919589352662" className="hover:text-mint transition-colors font-mono">
+                  +91 95893 52662
+                </a>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-emerald shrink-0" />
-                <span>contact@fintara.capital</span>
+                <Mail className="w-3.5 h-3.5 text-mint shrink-0" />
+                <a href="mailto:fintaracapital@gmail.com" className="hover:text-mint transition-colors font-mono">
+                  fintaracapital@gmail.com
+                </a>
               </div>
             </div>
 
-            {/* Verified Social Media Links */}
+            {/* Verified Social Media Channels */}
             <div className="pt-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white/40 block mb-2">
-                Connect With Us
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white/40 block mb-2.5">
+                Official Social Profiles
               </span>
               <div className="flex items-center gap-2.5">
                 <a
@@ -84,7 +93,7 @@ export function PublicFooter() {
                   rel="noopener noreferrer"
                   aria-label="Fintara Capital on X (Twitter)"
                   className="w-8 h-8 rounded-lg bg-white/5 border border-white/15 hover:bg-emerald hover:border-emerald hover:text-white transition-all flex items-center justify-center text-white/80"
-                  title="X (formerly Twitter)"
+                  title="X (Twitter)"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -118,12 +127,12 @@ export function PublicFooter() {
                 </a>
 
                 <a
-                  href="https://wa.me/919826100000?text=Hi%20Fintara%20Capital,%20I%20would%20like%20to%20enquire%20about%20a%20loan"
+                  href="https://wa.me/919589352662?text=Hi%20Fintara%20Capital,%20I%20would%20like%20to%20enquire%20about%20a%20loan"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="WhatsApp Loan Desk"
-                  className="w-8 h-8 rounded-lg bg-emerald/20 border border-emerald/40 text-emerald-light hover:bg-emerald hover:text-white transition-all flex items-center justify-center"
-                  title="WhatsApp"
+                  className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-400/40 text-mint hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center"
+                  title="WhatsApp (+91 95893 52662)"
                 >
                   <MessageCircle className="w-4 h-4" />
                 </a>
@@ -136,27 +145,27 @@ export function PublicFooter() {
             <p className="text-white font-bold text-xs uppercase tracking-wider">Secured Loans</p>
             <ul className="space-y-1.5">
               <li>
-                <Link href="/loans/home-loan/" className="hover:text-emerald transition-colors">
+                <Link href="/loans/home-loan/" className="hover:text-mint transition-colors">
                   Home Loans
                 </Link>
               </li>
               <li>
-                <Link href="/loans/loan-against-property/" className="hover:text-emerald transition-colors">
-                  Loan Against Property
+                <Link href="/loans/loan-against-property/" className="hover:text-mint transition-colors">
+                  Loan Against Property (LAP)
                 </Link>
               </li>
               <li>
-                <Link href="/loans/secured-loans/" className="hover:text-emerald transition-colors">
-                  Commercial Mortgages
+                <Link href="/loans/secured-loans/" className="hover:text-mint transition-colors">
+                  Commercial Property Mortgages
                 </Link>
               </li>
               <li>
-                <Link href="/balance-transfer/" className="hover:text-emerald transition-colors">
+                <Link href="/balance-transfer/" className="hover:text-mint transition-colors">
                   Balance Transfer &amp; Top-up
                 </Link>
               </li>
               <li>
-                <Link href="/calculators/emi/" className="hover:text-emerald transition-colors">
+                <Link href="/calculators/emi/" className="hover:text-mint transition-colors">
                   EMI Calculator
                 </Link>
               </li>
@@ -168,28 +177,63 @@ export function PublicFooter() {
             <p className="text-white font-bold text-xs uppercase tracking-wider">Unsecured Loans</p>
             <ul className="space-y-1.5">
               <li>
-                <Link href="/loans/business-loan/" className="hover:text-emerald transition-colors">
-                  Business Loans
+                <Link href="/loans/business-loan/" className="hover:text-mint transition-colors">
+                  Business Loans &amp; MSME
                 </Link>
               </li>
               <li>
-                <Link href="/loans/personal-loan/" className="hover:text-emerald transition-colors">
-                  Personal Loans
+                <Link href="/loans/personal-loan/" className="hover:text-mint transition-colors">
+                  Personal Loans (Prime Salaried)
                 </Link>
               </li>
               <li>
-                <Link href="/loans/unsecured-loans/" className="hover:text-emerald transition-colors">
-                  Doctor &amp; CA Loans
+                <Link href="/loans/unsecured-loans/" className="hover:text-mint transition-colors">
+                  Professional Loans (Doctors/CAs)
                 </Link>
               </li>
               <li>
-                <Link href="/calculators/eligibility/" className="hover:text-emerald transition-colors">
+                <Link href="/calculators/eligibility/" className="hover:text-mint transition-colors">
                   Eligibility Calculator
                 </Link>
               </li>
               <li>
-                <Link href="/contact/" className="hover:text-emerald transition-colors">
-                  Instant Loan Enquiry
+                <Link href="/contact/" className="hover:text-mint transition-colors">
+                  Instant Loan Desk
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Resources & Content Marketing Column */}
+          <div className="space-y-2.5">
+            <p className="text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <span>Resources &amp; Guides</span>
+              <span className="bg-mint/20 text-mint text-[9px] px-1.5 py-0.2 rounded font-mono">NEW</span>
+            </p>
+            <ul className="space-y-1.5">
+              <li>
+                <Link href="/resources/" className="hover:text-mint transition-colors font-semibold text-white/90">
+                  Loan Cheat Sheets &amp; Hub
+                </Link>
+              </li>
+              <li>
+                <Link href="/resources/#home-loan-checklist" className="hover:text-mint transition-colors">
+                  Home Loan Document Checklist
+                </Link>
+              </li>
+              <li>
+                <Link href="/resources/#lap-guide" className="hover:text-mint transition-colors">
+                  LAP Valuation &amp; LTV Guide
+                </Link>
+              </li>
+              <li>
+                <Link href="/resources/#cibil-hacks" className="hover:text-mint transition-colors">
+                  CIBIL 750+ Optimization Guide
+                </Link>
+              </li>
+              <li>
+                <Link href="/articles/" className="hover:text-mint transition-colors">
+                  Borrower Insights &amp; Market Rate
                 </Link>
               </li>
             </ul>
@@ -200,43 +244,38 @@ export function PublicFooter() {
             <p className="text-white font-bold text-xs uppercase tracking-wider">Firm &amp; Legal</p>
             <ul className="space-y-1.5">
               <li>
-                <Link href="/about/" className="hover:text-emerald transition-colors">
+                <Link href="/about/" className="hover:text-mint transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/team/" className="hover:text-emerald transition-colors">
-                  Advisory Team
+                <Link href="/team/" className="hover:text-mint transition-colors">
+                  Executive Advisory Team
                 </Link>
               </li>
               <li>
-                <Link href="/reviews/" className="hover:text-emerald transition-colors">
-                  Client Reviews
+                <Link href="/reviews/" className="hover:text-mint transition-colors">
+                  Client Reviews &amp; Case Studies
                 </Link>
               </li>
               <li>
-                <Link href="/articles/" className="hover:text-emerald transition-colors">
-                  Borrower Insights
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy/" className="hover:text-emerald transition-colors">
+                <Link href="/privacy/" className="hover:text-mint transition-colors">
                   Privacy Policy (DPDP Act)
                 </Link>
               </li>
               <li>
-                <Link href="/terms/" className="hover:text-emerald transition-colors">
+                <Link href="/terms/" className="hover:text-mint transition-colors">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/disclosures/" className="hover:text-emerald transition-colors">
+                <Link href="/disclosures/" className="hover:text-mint transition-colors">
                   Statutory Disclosures
                 </Link>
               </li>
               <li>
-                <Link href="/grievance/" className="hover:text-emerald transition-colors">
-                  Grievance Redressal
+                <Link href="/grievance/" className="hover:text-mint transition-colors">
+                  Grievance Redressal Officer
                 </Link>
               </li>
             </ul>
@@ -245,9 +284,9 @@ export function PublicFooter() {
 
         {/* Regulatory Disclaimers & Copyright */}
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-white/40">
-          <p>&copy; {new Date().getFullYear()} Fintara Capital, Raipur (C.G.). All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Fintara Capital (fintara.capital). All rights reserved.</p>
           <p className="text-center sm:text-right max-w-xl leading-relaxed">
-            Fintara Capital is an institutional credit intermediary and Direct Selling Agent (DSA). All loan sanctions, interest rates, valuation norms, processing charges, and disbursals are strictly governed by partner banks and NBFCs in compliance with RBI regulations.
+            Fintara Capital is an institutional credit intermediary and loan advisory desk. All loan sanctions, interest rates, valuations, processing charges, and disbursals are strictly governed by partner banks and NBFCs under Reserve Bank of India (RBI) guidelines. Zero raw identity documents are permanently archived.
           </p>
         </div>
       </div>

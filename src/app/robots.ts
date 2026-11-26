@@ -3,7 +3,7 @@ import { MetadataRoute } from "next";
 export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://fintara-capital.vercel.app";
+  const baseUrl = "https://fintara.capital";
 
   return {
     rules: [
@@ -14,5 +14,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   };
 }

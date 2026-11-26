@@ -3,10 +3,11 @@ import { MetadataRoute } from "next";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://fintara-capital.vercel.app";
+  const baseUrl = "https://fintara.capital";
 
   const routes = [
     "",
+    "/resources/",
     "/about/",
     "/team/",
     "/reviews/",
@@ -32,6 +33,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
-    priority: route === "" ? 1.0 : route.startsWith("/loans") || route.startsWith("/calculators") || route === "/apply/" ? 0.8 : 0.5,
+    priority:
+      route === ""
+        ? 1.0
+        : route === "/resources/" || route.startsWith("/loans") || route.startsWith("/calculators") || route === "/apply/"
+        ? 0.9
+        : 0.6,
   }));
 }

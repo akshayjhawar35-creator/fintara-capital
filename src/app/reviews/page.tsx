@@ -268,7 +268,7 @@ export default function ReviewsPage() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <a
-                href="https://wa.me/919826100000?text=Hi%20Fintara%20Capital,%20I%20would%20like%20to%20discuss%20a%20loan%20requirement"
+                href="https://wa.me/919589352662?text=Hi%20Fintara%20Capital,%20I%20would%20like%20to%20discuss%20a%20loan%20requirement"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5 border border-white/20"

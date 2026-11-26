@@ -18,8 +18,8 @@ export default function GrievancePage() {
             <h2 className="font-bold text-midnight text-sm">Grievance Redressal Officer</h2>
             <p><strong>Name:</strong> Senior Compliance Officer, Fintara Capital</p>
             <p><strong>HQ Address:</strong> Civil Lines / Pandri, Raipur, Chhattisgarh &ndash; 492001, India</p>
-            <p><strong>Email:</strong> grievance@fintara.capital / contact@fintara.capital</p>
-            <p><strong>Direct Helpline:</strong> +91 98261 00000</p>
+            <p><strong>Email:</strong> fintaracapital@gmail.com</p>
+            <p><strong>Direct Helpline:</strong> +91 95893 52662</p>
             <p><strong>Resolution SLA / TAT:</strong> 7 business days from receipt of grievance</p>
           </div>
         </div>
