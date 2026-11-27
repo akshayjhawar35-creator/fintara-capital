@@ -41,7 +41,7 @@ export default function BalanceTransferPage() {
           </h1>
           <p className="text-sm md:text-base text-slate mt-2 max-w-2xl leading-relaxed">
             Switch your existing Home Loan or Loan Against Property to competitive market rates.
-            Fintara Capital negotiates with 30+ leading banks and HFCs across Raipur and Chhattisgarh to reduce your monthly EMI and secure top-up capital.
+            Fintara Capital negotiates with 18+ leading national banks and HFCs across India to reduce your monthly EMI and unlock top-up capital.
           </p>
         </div>
 

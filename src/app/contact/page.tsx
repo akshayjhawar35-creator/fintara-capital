@@ -147,10 +147,10 @@ export default function ContactPage() {
                     <div>
                       <strong className="text-midnight block font-semibold">Office Address</strong>
                       <span className="text-slate-600 leading-relaxed">
-                        Fintara Capital, Civil Lines &amp; Pandri Commercial Hub, Raipur, Chhattisgarh &ndash; 492001, India.
+                        Office No. 421, Walfort Omega, Raipur (C.G.), India.
                       </span>
                       <span className="block text-[11px] text-emerald font-medium mt-0.5">
-                        Serving Borrowers Across Raipur, Bhilai, Bilaspur &amp; All India
+                        Serving Borrowers Across Chhattisgarh &amp; All India
                       </span>
                     </div>
                   </div>
@@ -364,10 +364,12 @@ export default function ContactPage() {
                         >
                           <option value="Home Loan">Home Loan (Purchase / Construction)</option>
                           <option value="Loan Against Property">Loan Against Property (LAP)</option>
+                          <option value="New Project Loan">New Project Loan (Capex / Term Finance)</option>
+                          <option value="Working Capital (Secured CC/OD)">Working Capital Limit (Secured CC / OD)</option>
+                          <option value="Working Capital (Unsecured)">Working Capital Limit (Unsecured)</option>
                           <option value="Business Loan">Unsecured Business Loan</option>
                           <option value="Personal Loan">Personal Loan</option>
                           <option value="Balance Transfer">Balance Transfer &amp; Top-up</option>
-                          <option value="Working Capital (OD/CC)">Working Capital (OD / CC Limit)</option>
                         </select>
                       </div>
 

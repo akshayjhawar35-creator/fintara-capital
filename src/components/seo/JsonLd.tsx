@@ -20,7 +20,7 @@ export function JsonLd({ type = "FinancialService", data }: JsonLdProps) {
     email: "fintaracapital@gmail.com",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Civil Lines & Pandri Commercial District",
+      streetAddress: "Office No. 421, Walfort Omega",
       addressLocality: "Raipur",
       addressRegion: "Chhattisgarh",
       postalCode: "492001",
@@ -71,16 +71,24 @@ export function JsonLd({ type = "FinancialService", data }: JsonLdProps) {
           "@type": "Offer",
           itemOffered: {
             "@type": "FinancialProduct",
-            name: "Unsecured Business Loans & MSME Credit",
-            description: "Collateral-free business loans, CC/OD limits, machinery finance, and GST-based limits.",
+            name: "New Project Loans & Capex Finance",
+            description: "Term finance for industrial expansion, warehouses, hospitals, and machinery.",
           },
         },
         {
           "@type": "Offer",
           itemOffered: {
             "@type": "FinancialProduct",
-            name: "Personal Loans for Professionals",
-            description: "Fast-track unsecured personal financing for corporate salaried staff, doctors, and CAs.",
+            name: "Working Capital Limits (Secured & Unsecured)",
+            description: "Secured CC, Overdraft, Drop-line OD, Bank Guarantees, and collateral-free business lines.",
+          },
+        },
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "FinancialProduct",
+            name: "Business Loans & Personal Loans",
+            description: "Collateral-free SME business loans and personal financing for salaried professionals.",
           },
         },
         {

@@ -38,11 +38,18 @@ const SECURED_PRODUCTS = [
     purpose: "Business Expansion & Personal Capital",
   },
   {
-    title: "Commercial Property Purchase",
-    href: "/apply/",
-    desc: "Financing for buying commercial offices, retail shops, showrooms, or industrial warehouses across urban and industrial zones.",
-    tenure: "Up to 15 Years",
-    purpose: "Business Premises & Commercial Investment",
+    title: "New Project Loans & Capex",
+    href: "/loans/project-loans/",
+    desc: "Structured term finance for greenfield industrial plants, hospitals, warehouses, and machinery expansion.",
+    tenure: "Up to 12 Years",
+    purpose: "Industrial & Infrastructure Capex",
+  },
+  {
+    title: "Secured Working Capital (CC / OD)",
+    href: "/loans/working-capital/",
+    desc: "Cash Credit, Overdraft, Drop-line OD, and Non-Fund Limits (BG/LC) backed by property or inventory.",
+    tenure: "Revolving / Drop-line",
+    purpose: "Day-to-Day Business Liquidity",
   },
   {
     title: "Balance Transfer & Top-Up",

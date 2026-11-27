@@ -44,11 +44,11 @@ const UNSECURED_PRODUCTS = [
     target: "Licensed Medical & Financial Professionals",
   },
   {
-    title: "GST-Based Working Capital",
-    href: "/apply/",
-    desc: "Credit limits structured directly against monthly GSTR-3B filings, ideal for fast-growing manufacturers and wholesalers.",
+    title: "Unsecured Working Capital Limits",
+    href: "/loans/working-capital/",
+    desc: "Collateral-free revolving business overdraft lines, bill discounting, and GST-linked credit limits.",
     speed: "Fast Assessment",
-    target: "GST-Registered Enterprises",
+    target: "Traders, Wholesalers & MSMEs",
   },
 ];
 

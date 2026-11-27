@@ -114,6 +114,22 @@ const GUIDES: ResourceGuide[] = [
     shareText:
       "Learn when a Balance Transfer saves you maximum interest: https://fintara.capital/resources/#balance-transfer-rulebook",
   },
+  {
+    id: "working-capital-project-finance",
+    category: "Business Debt",
+    title: "Working Capital Limits (CC / OD) & New Project Finance Guide",
+    readTime: "4 min read",
+    summary:
+      "How businesses structure secured Cash Credit (CC), Overdraft (OD), Drop-line OD, and unsecured working capital limits alongside term loans for new industrial or commercial projects.",
+    keyTakeaways: [
+      "CC / OD limits charge interest strictly on daily utilized balance rather than full sanctioned limit.",
+      "New Project Loans require a Detailed Project Report (DPR) with CMA projections and promoter margin.",
+      "Unsecured working capital limits rely on GST returns and 12-month banking credits without property pledge.",
+      "Non-fund limits (Bank Guarantees & LCs) lower upfront capital lock-up for contractors and traders.",
+    ],
+    shareText:
+      "Guide to Working Capital (CC/OD) & Project Loans by Fintara Capital: https://fintara.capital/resources/#working-capital-project-finance",
+  },
 ];
 
 export default function ResourcesPage() {
@@ -370,7 +386,7 @@ export default function ResourcesPage() {
               Need Personalized Guidance on Your Credit Profile?
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
-              Our Raipur debt advisory desk reviews your files against 18+ bank scorecards before a single application is lodged. Zero credit score impact, zero borrower fees.
+              Our advisory desk at Office No. 421, Walfort Omega, Raipur reviews your requirements across 18+ banks before submitting your file. Zero credit score impact, zero borrower fees.
             </p>
             <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
               <Link

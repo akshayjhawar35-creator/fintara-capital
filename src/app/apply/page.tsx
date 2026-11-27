@@ -184,8 +184,11 @@ function ApplyFormContent() {
             >
               <option value="Home Loan">Home Loan</option>
               <option value="Loan Against Property">Loan Against Property (LAP)</option>
+              <option value="New Project Loan">New Project Loan</option>
+              <option value="Working Capital (Secured CC/OD)">Working Capital Limit (Secured CC/OD)</option>
+              <option value="Working Capital (Unsecured)">Working Capital Limit (Unsecured)</option>
               <option value="Business Loan">Business Loan</option>
-              <option value="Working Capital (OD/CC)">Working Capital (OD/CC)</option>
+              <option value="Personal Loan">Personal Loan</option>
               <option value="Balance Transfer (Takeover)">Balance Transfer (Takeover)</option>
             </select>
           </div>

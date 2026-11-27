@@ -1,42 +1,42 @@
 @import "tailwindcss";
 
 /*
- * Fintara Capital — Top 1% Funded Fintech Design Tokens
+ * Fintara Capital — Crisp Funded Fintech Design Tokens
  * ==============================================================
- * Deep Obsidian Void, Electric Mint & Trust Emerald, Champagne Gold,
- * Precision Micro-Borders, Glassmorphism & High-Performance 3D Transforms.
+ * Deep Obsidian Midnight, Trust Emerald, Clean Slate Surfaces,
+ * 1px Hairline Borders & Subtle Elevation.
  */
 
 @theme {
   /* ── Brand Palette ── */
-  --color-midnight: #060913;         /* Deep Obsidian Black-Navy */
-  --color-midnight-light: #0D1527;   /* Secondary Obsidian Surface */
-  --color-midnight-card: #121D36;    /* Dark Card Container */
+  --color-midnight: #0A1020;         /* Deep Obsidian Navy */
+  --color-midnight-light: #131D35;   /* Secondary Surface */
+  --color-midnight-card: #18233F;    /* Dark Card Container */
   --color-gold: #D4AF37;             /* Refined Champagne Gold */
   --color-gold-light: #F3DE8A;
   --color-emerald: #059669;          /* High-Trust Emerald */
   --color-emerald-light: #10B981;    /* Vibrant Emerald */
-  --color-mint: #00F5A0;             /* Electric Mint / Venture Pulse */
+  --color-mint: #10B981;             /* Clean Fintech Accent */
   --color-teal: #0D9488;             /* Deep Accent Teal */
-  --color-paper: #F8FAFC;            /* Ultra-clean Slate Page Background */
+  --color-paper: #F8FAFC;            /* Crisp Slate Background */
   --color-surface: #FFFFFF;
-  --color-slate: #334155;            /* Slate-700 High-legibility Body */
-  --color-slate-light: #64748B;      /* Slate-500 Secondary */
-  --color-slate-muted: #94A3B8;      /* Slate-400 Muted */
+  --color-slate: #334155;            /* High-legibility Body */
+  --color-slate-light: #64748B;      /* Secondary Copy */
+  --color-slate-muted: #94A3B8;      /* Muted Label */
   --color-card-border: #E2E8F0;
 
   /* ── Alert Colours (Operational Meanings) ── */
-  --color-alert-overdue: #DC2626;       /* red-600 */
-  --color-alert-due-today: #EA580C;     /* orange-600 */
-  --color-alert-due-soon-bg: #FEF9C3;  /* yellow-100 */
-  --color-alert-due-soon-fg: #854D0E;  /* yellow-800 */
-  --color-alert-ok-bg: #DCFCE7;        /* green-100 */
-  --color-alert-ok-fg: #166534;        /* green-800 */
-  --color-alert-takeover-bg: #EFF6FF;  /* blue-50 */
-  --color-alert-takeover-fg: #1D4ED8;  /* blue-700 */
-  --color-alert-topup-bg: #FAF5FF;     /* purple-50 */
-  --color-alert-topup-fg: #7E22CE;     /* purple-700 */
-  --color-alert-stuck-bg: #1E293B;     /* slate-800 */
+  --color-alert-overdue: #DC2626;
+  --color-alert-due-today: #EA580C;
+  --color-alert-due-soon-bg: #FEF9C3;
+  --color-alert-due-soon-fg: #854D0E;
+  --color-alert-ok-bg: #DCFCE7;
+  --color-alert-ok-fg: #166534;
+  --color-alert-takeover-bg: #EFF6FF;
+  --color-alert-takeover-fg: #1D4ED8;
+  --color-alert-topup-bg: #FAF5FF;
+  --color-alert-topup-fg: #7E22CE;
+  --color-alert-stuck-bg: #1E293B;
   --color-alert-stuck-fg: #FFFFFF;
 
   /* ── Typography ── */
@@ -44,9 +44,9 @@
   --font-serif: var(--font-newsreader), "Newsreader", Georgia, Cambria, serif;
 
   /* ── Spacing scale ── */
-  --spacing-sidebar: 15rem;       /* 240px */
-  --spacing-sidebar-collapsed: 4rem; /* 64px */
-  --spacing-topbar: 3.5rem;       /* 56px */
+  --spacing-sidebar: 15rem;
+  --spacing-sidebar-collapsed: 4rem;
+  --spacing-topbar: 3.5rem;
 
   /* ── Border radius ── */
   --radius-sm: 0.375rem;
@@ -54,7 +54,7 @@
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-2xl: 1.25rem;
-  --radius-3xl: 1.75rem;
+  --radius-3xl: 1.5rem;
 }
 
 /*
@@ -66,7 +66,7 @@ html {
   background-color: var(--color-paper);
   font-size: 15px;
   line-height: 1.6;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
@@ -76,24 +76,15 @@ body {
   min-height: 100dvh;
 }
 
-/*
- * ── Tabular Numerals for Financial Data ──
- */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
-/*
- * ── Focus Ring ──
- */
 :focus-visible {
   outline: 2px solid var(--color-emerald);
   outline-offset: 2px;
 }
 
-/*
- * ── Reduced Motion ──
- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -105,9 +96,6 @@ body {
   }
 }
 
-/*
- * ── Scrollbar Styling ──
- */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -127,128 +115,43 @@ body {
 }
 
 /*
- * ── Venture Background Grids & Ambient Lighting ──
+ * ── Clean Fintech Surfaces & Grids ──
  */
 .bg-grid-subtle {
   background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
 }
 
 .bg-grid-dark {
-  background-size: 36px 36px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
 }
 
 .fintech-gradient-hero {
-  background: radial-gradient(circle at 85% 15%, rgba(0, 245, 160, 0.12) 0%, rgba(13, 148, 136, 0.22) 30%, #060913 80%);
-}
-
-.glow-mesh {
-  background: radial-gradient(circle at 50% 0%, rgba(0, 245, 160, 0.16) 0%, rgba(13, 148, 136, 0.08) 45%, transparent 75%);
+  background: radial-gradient(circle at 80% 10%, rgba(16, 185, 129, 0.14) 0%, rgba(10, 16, 32, 0.98) 55%, #0A1020 100%);
 }
 
 /*
- * ── Cards & Elevation ──
+ * ── Clean Flat Card Elevation (No 3D Skew) ──
  */
 .fintech-card {
   background: #FFFFFF;
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  box-shadow: 0 1px 3px 0 rgba(6, 9, 19, 0.03), 0 1px 2px -1px rgba(6, 9, 19, 0.03);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 2px 0 rgba(10, 16, 32, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .fintech-card:hover {
   border-color: rgba(5, 150, 105, 0.35);
-  box-shadow: 0 12px 28px -6px rgba(6, 9, 19, 0.07), 0 6px 12px -4px rgba(6, 9, 19, 0.04);
+  box-shadow: 0 10px 25px -5px rgba(10, 16, 32, 0.06), 0 4px 10px -6px rgba(10, 16, 32, 0.04);
   transform: translateY(-2px);
 }
 
-.fintech-card-dark {
-  background: rgba(18, 29, 54, 0.7);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
-}
-
-/*
- * ── 3D Fintech Visual Effects & Perspectives ──
- */
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-.perspective-1400 {
-  perspective: 1400px;
-}
-
-.preserve-3d {
-  transform-style: preserve-3d;
-}
-
-.tilt-card-3d {
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s ease, border-color 0.3s ease;
-  transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
-}
-
-.tilt-card-3d:hover {
-  transform: perspective(1000px) rotateX(2.5deg) rotateY(-2deg) translateZ(10px);
-  box-shadow: 0 24px 48px -12px rgba(6, 9, 19, 0.16), 0 0 24px 0 rgba(0, 245, 160, 0.15);
-  border-color: rgba(0, 245, 160, 0.4);
-}
-
-.hero-3d-card {
-  transform: perspective(1200px) rotateY(-5deg) rotateX(3deg);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: -20px 30px 60px -10px rgba(6, 9, 19, 0.45), 0 0 35px rgba(0, 245, 160, 0.18);
-}
-
-.hero-3d-card:hover {
-  transform: perspective(1200px) rotateY(-1deg) rotateX(1deg) translateY(-4px);
-  box-shadow: -25px 35px 70px -10px rgba(6, 9, 19, 0.5), 0 0 45px rgba(0, 245, 160, 0.28);
-}
-
-.floating-3d {
-  animation: float3d 5.5s ease-in-out infinite;
-}
-
-.floating-3d-reverse {
-  animation: float3dReverse 6.5s ease-in-out infinite;
-}
-
-@keyframes float3d {
-  0%, 100% {
-    transform: translateY(0px) translateZ(20px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-8px) translateZ(32px) rotate(1.2deg);
-  }
-}
-
-@keyframes float3dReverse {
-  0%, 100% {
-    transform: translateY(0px) translateZ(16px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(7px) translateZ(26px) rotate(-1.2deg);
-  }
-}
-
-.glass-card-3d {
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 20px 45px -15px rgba(6, 9, 19, 0.12), 0 0 1px 1px rgba(255, 255, 255, 0.9) inset;
-}
-
-/* Custom Range Input Styling for 3D Simulator */
+/* Clean Range Input */
 input[type="range"] {
   accent-color: #059669;
-}
-input[type="range"]::-webkit-slider-thumb {
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(0, 245, 160, 0.4);
 }

@@ -4,9 +4,7 @@ import { PublicFooter } from "@/components/public/PublicFooter";
 import {
   ShieldCheck,
   Building2,
-  Users,
   Compass,
-  CheckCircle2,
   Clock,
   Award,
   ArrowRight,
@@ -17,7 +15,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 export const metadata = {
   title: "About Us | Pan-India Loan Advisory & Facilitation",
   description:
-    "Learn about Fintara Capital — India's premier loan facilitation desk headquartered in Raipur. Partnering with 18+ national banks & NBFCs to deliver unbiased credit advisory.",
+    "Fintara Capital is an institutional loan advisory desk at Office No. 421, Walfort Omega, Raipur (C.G.), partnering with 18+ banks and NBFCs across India.",
 };
 
 export default function AboutPage() {
@@ -27,119 +25,118 @@ export default function AboutPage() {
       <PublicHeader />
 
       {/* Hero Section */}
-      <section className="fintech-gradient-hero text-white py-16 md:py-24 px-4">
+      <section className="fintech-gradient-hero text-white py-14 md:py-20 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold border border-emerald-500/30">
             <Globe2 className="w-3.5 h-3.5" />
-            Headquartered in Raipur &bull; Serving Borrowers Across India
+            Office No. 421, Walfort Omega, Raipur (C.G.) &bull; Pan-India Reach
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl font-semibold leading-tight">
-            Institutional Credit Advisory for Modern Borrowers
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+            Institutional Credit Advisory Without Friction
           </h1>
-          <p className="text-white/80 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Fintara Capital acts as your dedicated advocate across 18+ leading national banks and housing finance institutions. We eliminate banking friction, structure loans for maximum eligibility, and handle every step from login through disbursal.
+          <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Fintara Capital acts as a dedicated intermediary across 18+ national banks and NBFCs, helping retail and commercial borrowers secure the right loan structure from login to disbursal.
           </p>
         </div>
       </section>
 
-      {/* Key Numbers / Trust Bar */}
-      <section className="bg-white border-b border-slate/15 py-8 px-4">
+      {/* Factual Trust Strip */}
+      <section className="bg-white border-b border-slate-200 py-7 px-4">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div>
-            <span className="block text-2xl md:text-3xl font-bold text-midnight font-mono">18+</span>
-            <span className="text-xs text-slate font-medium">Partner Banks &amp; NBFCs</span>
+            <span className="block text-2xl font-extrabold text-midnight font-mono">18+</span>
+            <span className="text-xs text-slate-600 font-medium">Banks &amp; NBFC Partners</span>
           </div>
           <div>
-            <span className="block text-2xl md:text-3xl font-bold text-emerald font-mono">₹150+ Cr</span>
-            <span className="text-xs text-slate font-medium">Cumulative Loan Facilitation</span>
+            <span className="block text-2xl font-extrabold text-emerald font-mono">Pan-India</span>
+            <span className="text-xs text-slate-600 font-medium">Digital &amp; Doorstep Support</span>
           </div>
           <div>
-            <span className="block text-2xl md:text-3xl font-bold text-midnight font-mono">Pan-India</span>
-            <span className="text-xs text-slate font-medium">Digital Service Reach</span>
+            <span className="block text-2xl font-extrabold text-midnight font-mono">All Debt</span>
+            <span className="text-xs text-slate-600 font-medium">Retail, Project &amp; CC/OD</span>
           </div>
           <div>
-            <span className="block text-2xl md:text-3xl font-bold text-gold font-mono">₹0</span>
-            <span className="text-xs text-slate font-medium">Zero Upfront Fee Guarantee</span>
+            <span className="block text-2xl font-extrabold text-emerald font-mono">₹0</span>
+            <span className="text-xs text-slate-600 font-medium">Zero Advisory Fee</span>
           </div>
         </div>
       </section>
 
-      {/* Main Narrative */}
-      <section className="py-16 px-4 max-w-4xl mx-auto space-y-12">
-        <div className="space-y-4">
-          <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-midnight">
-            Our Mission &amp; Foundation
+      {/* Main Content */}
+      <section className="py-14 px-4 max-w-4xl mx-auto space-y-10">
+        <div className="space-y-3">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-midnight tracking-tight">
+            Our Mission &amp; Focus
           </h2>
-          <p className="text-slate text-sm sm:text-base leading-relaxed">
-            Borrowing in India should not be a maze of conflicting sales pitches, hidden clauses, and endless branch visits. Fintara Capital was founded with a single core principle: to bring transparent, institutional-grade mortgage and business loan advisory to borrowers nationwide.
+          <p className="text-slate-600 text-sm leading-relaxed">
+            Arranging capital should not mean navigating opaque bank policies, repeated branch visits, or hard CIBIL inquiry hits. Fintara Capital benchmarks your profile across public sector banks, private banks, and NBFCs before your file is submitted—matching your exact financials, property title, or project report to the lender with the cleanest approval path.
           </p>
-          <p className="text-slate text-sm sm:text-base leading-relaxed">
-            Headquartered in the thriving commercial corridor of Raipur, Chhattisgarh, we blend localized underwriting insight with deep relationships across premier national lenders including HDFC Bank, State Bank of India, ICICI Bank, Bajaj Finance, Axis Bank, Kotak Mahindra, and Tata Capital.
+          <p className="text-slate-600 text-sm leading-relaxed">
+            Operating from Office No. 421, Walfort Omega, Raipur (C.G.), we serve homebuyers, professionals, MSMEs, and industrial promoters across Chhattisgarh and major Indian commercial hubs.
           </p>
         </div>
 
         {/* 4 Core Pillars */}
-        <div className="grid sm:grid-cols-2 gap-6">
-          <div className="fintech-card p-6 rounded-2xl space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-teal/10 flex items-center justify-center text-teal">
+        <div className="grid sm:grid-cols-2 gap-5">
+          <div className="fintech-card p-6 rounded-2xl space-y-2.5">
+            <div className="w-9 h-9 rounded-xl bg-teal/10 flex items-center justify-center text-teal">
               <Compass className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-midnight text-base">Unbiased Multi-Lender Advocacy</h3>
-            <p className="text-xs text-slate leading-relaxed">
-              We are not tied to any single lender. When you approach Fintara, we assess your profile across multiple credit policies to secure the highest loan-to-value, optimal tenure, and smoothest approval path.
+            <h3 className="font-bold text-midnight text-base">Unbiased Multi-Lender Matching</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              We compare credit policies across 18+ institutions to optimize loan-to-value (LTV), tenure, and overall borrowing cost.
             </p>
           </div>
 
-          <div className="fintech-card p-6 rounded-2xl space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+          <div className="fintech-card p-6 rounded-2xl space-y-2.5">
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald">
               <ShieldCheck className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-midnight text-base">Zero Upfront Advisory Fee</h3>
-            <p className="text-xs text-slate leading-relaxed">
-              Borrowers never pay Fintara an advisory fee. We are compensated directly by our lending partners upon successful loan disbursal, ensuring our incentives align 100% with getting your file approved.
+            <h3 className="font-bold text-midnight text-base">Zero Borrower Advisory Fee</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Borrowers pay zero consultation or upfront file charges. We are remunerated directly by partner lenders upon successful disbursal.
             </p>
           </div>
 
-          <div className="fintech-card p-6 rounded-2xl space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-gold">
+          <div className="fintech-card p-6 rounded-2xl space-y-2.5">
+            <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-700">
               <Clock className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-midnight text-base">Doorstep &amp; Digital Liaisoning</h3>
-            <p className="text-xs text-slate leading-relaxed">
-              From picking up initial documents to coordinating legal search, technical valuation, and banker queries, we handle the friction so you can focus on your home or enterprise.
+            <h3 className="font-bold text-midnight text-base">End-to-End File Coordination</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              From pre-assessment and document compilation to legal search, technical valuation, and disbursement coordination, we manage the workflow.
             </p>
           </div>
 
-          <div className="fintech-card p-6 rounded-2xl space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-midnight/5 flex items-center justify-center text-midnight">
+          <div className="fintech-card p-6 rounded-2xl space-y-2.5">
+            <div className="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-midnight">
               <Award className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-midnight text-base">DPDP Act Compliance &amp; Security</h3>
-            <p className="text-xs text-slate leading-relaxed">
-              We adhere strictly to India&apos;s Digital Personal Data Protection (DPDP) Act 2023. We never sell your contact details to spam aggregators, and all records are safeguarded under strict privacy protocols.
+            <h3 className="font-bold text-midnight text-base">DPDP Act Data Privacy</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Strict affirmative consent under the DPDP Act 2023. Your financials are shared only with the lenders you authorize—never sold to aggregators.
             </p>
           </div>
         </div>
 
-        {/* Regulatory & Institutional Notice */}
-        <div className="p-6 bg-surface rounded-2xl border border-slate/15 space-y-2 text-xs text-slate">
-          <div className="font-semibold text-midnight text-sm flex items-center gap-2">
+        {/* Statutory Notice */}
+        <div className="p-5 bg-white rounded-2xl border border-slate-200 space-y-1.5 text-xs text-slate-600">
+          <div className="font-bold text-midnight text-sm flex items-center gap-2">
             <Building2 className="w-4 h-4 text-emerald" />
-            Statutory &amp; Regulatory Disclosures
+            <span>Regulatory Status</span>
           </div>
           <p className="leading-relaxed">
-            Fintara Capital is an authorized Direct Selling Agent (DSA) and credit facilitator. We do not accept deposits, nor do we directly lend funds. All credit evaluations, underwriting decisions, interest rate determinations, and disbursals are solely at the statutory discretion of the respective financing institutions.
+            Fintara Capital operates as an authorized Direct Selling Agent (DSA) and loan intermediary. We do not accept public deposits or lend directly. All sanctions, interest rates, and terms are issued solely by partner banks and NBFCs under RBI regulations.
           </p>
         </div>
 
-        {/* Call to Action */}
-        <div className="text-center pt-4">
+        <div className="text-center pt-2">
           <Link
             href="/contact/"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-midnight text-white text-xs sm:text-sm font-semibold rounded-xl hover:bg-midnight/90 shadow-sm transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-midnight text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-midnight-light transition-colors"
           >
-            Start Your Loan Enquiry
-            <ArrowRight className="w-4 h-4 text-gold" />
+            <span>Start Your Loan Enquiry</span>
+            <ArrowRight className="w-4 h-4 text-emerald-400" />
           </Link>
         </div>
       </section>
