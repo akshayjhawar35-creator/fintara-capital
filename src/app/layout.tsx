@@ -4,25 +4,27 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://fintara.capital"),
+  alternates: {
+    canonical: "./",
+  },
   title: {
-    default: "Fintara Capital — Institutional Loan Advisory & Debt Desk",
+    default: "Fintara Capital — Home Loans, LAP, Project Finance & Working Capital",
     template: "%s | Fintara Capital",
   },
   description:
-    "India's premier institutional loan advisory desk. Compare Home Loans, Loan Against Property (LAP), Unsecured Business Loans, and Balance Transfers across 18+ leading banks and NBFCs with zero borrower fees.",
+    "Fintara Capital is a Pan-India loan advisory desk at Office No. 421, Walfort Omega, Raipur (C.G.). Compare Home Loans, LAP, New Project Loans, Working Capital (Secured & Unsecured CC/OD), Business & Personal Loans across 18+ banks and NBFCs.",
   keywords: [
     "Fintara Capital",
     "fintara.capital",
-    "Institutional Loan Advisory",
     "Home Loan Raipur",
-    "Home Loans India",
-    "Loan Against Property LAP",
-    "Unsecured Business Loan MSME",
-    "Personal Loan Salaried",
-    "Loan Balance Transfer Refinance",
-    "Mortgage Advisor India",
-    "CIBIL Score Optimization",
-    "Raipur Loan Desk",
+    "Loan Against Property Raipur",
+    "New Project Loans India",
+    "Working Capital Limits CC OD",
+    "Unsecured Business Loan",
+    "Personal Loan",
+    "Loan Balance Transfer",
+    "Loan Consultant Raipur",
+    "Walfort Omega Raipur",
   ],
   authors: [{ name: "Fintara Capital", url: "https://fintara.capital" }],
   creator: "Fintara Capital",
@@ -33,29 +35,29 @@ export const metadata: Metadata = {
     apple: "/brand/mark.svg",
   },
   openGraph: {
-    title: "Fintara Capital — Loans Curated Across 18+ National Lenders",
+    title: "Fintara Capital — Smart Loan Structuring Across 18+ Banks & NBFCs",
     description:
-      "Algorithmic rate arbitrage, maximum LTV, and doorstep in-principle sanctions across 18+ national banks and AAA-rated NBFCs. 100% free for borrowers.",
+      "Home Loans, LAP, New Project Loans, Working Capital (Secured & Unsecured CC/OD), Business & Personal Loans across 18+ banks and NBFCs with zero borrower fee.",
     url: "https://fintara.capital",
     siteName: "Fintara Capital",
     locale: "en_IN",
     type: "website",
     images: [
       {
-        url: "/brand/logo-horizontal.svg",
+        url: "/brand/og-card.png",
         width: 1200,
         height: 630,
-        alt: "Fintara Capital — Institutional Loan Advisory Desk",
+        alt: "Fintara Capital — Pan-India Loan Advisory",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fintara Capital — Institutional Debt Advisory",
+    title: "Fintara Capital — Pan-India Loan Advisory",
     description:
-      "Home Loans, LAP, Business Loans & Balance Transfers across 18+ national banks with zero borrower fees.",
+      "Home Loans, LAP, Project Loans & Working Capital Limits across 18+ banks with zero borrower fee.",
     creator: "@fintaracapital",
-    images: ["/brand/logo-horizontal.svg"],
+    images: ["/brand/og-card.png"],
   },
   robots: {
     index: true,

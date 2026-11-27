@@ -8,8 +8,21 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: "*",
-        allow: "/",
+        userAgent: [
+          "*",
+          "Googlebot",
+          "Google-Extended",
+          "OAI-SearchBot",
+          "GPTBot",
+          "ChatGPT-User",
+          "ClaudeBot",
+          "Claude-Web",
+          "anthropic-ai",
+          "PerplexityBot",
+          "Bingbot",
+          "Applebot-Extended",
+        ],
+        allow: ["/", "/llms.txt"],
         disallow: ["/app/", "/auth/"],
       },
     ],
